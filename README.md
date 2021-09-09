@@ -33,7 +33,7 @@
 | Дата | Номер | Тема | Материалы | ДЗ |
 | :---: | :---: | --- | --- | --- |
 | 02 сентября | 1  | <ul><li>Введение в Python</li></ul> | [Введение в Python](Seminars/Seminar%2001.%20Intro%20to%20Python) | Контест 1: Python |
-| 09 сентября | 2  | <ul><li>Векторизация. Библиотека Numpy. </li></ul> | [Векторизация с помощью Numpy](Seminars/Seminar%2002.%20Vectorization%20with%20Numpy) |  |
+| 09 сентября | 2  | <ul><li>Векторизация. Библиотека Numpy. </li></ul> | [Векторизация с помощью Numpy](Seminars/Seminar%2002.%20Vectorization%20with%20Numpy) | Контест 2: Numpy |
 
 
 
