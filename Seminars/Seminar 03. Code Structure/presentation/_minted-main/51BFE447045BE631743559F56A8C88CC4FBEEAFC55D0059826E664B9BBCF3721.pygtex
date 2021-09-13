@@ -1,0 +1,16 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{k}{class} \PYG{n+nc}{A}\PYG{p}{:}
+    \PYG{o}{...}    \PYG{k}{def} \PYG{n+nf}{get\PYGZus{}attr}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+    \PYG{o}{...}        \PYG{k}{return} \PYG{l+s+s1}{\PYGZsq{}a\PYGZsq{}}
+    \PYG{o}{...}
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{k}{class} \PYG{n+nc}{B}\PYG{p}{:}
+    \PYG{o}{...}    \PYG{k}{def} \PYG{n+nf}{get\PYGZus{}attr}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+    \PYG{o}{...}        \PYG{k}{return} \PYG{l+s+s1}{\PYGZsq{}b\PYGZsq{}}
+    \PYG{o}{...}
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{k}{class} \PYG{n+nc}{C}\PYG{p}{(}\PYG{n}{A}\PYG{p}{,} \PYG{n}{B}\PYG{p}{):}
+    \PYG{o}{...}     \PYG{k}{pass}
+    \PYG{o}{...}
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{obj} \PYG{o}{=} \PYG{n}{C}\PYG{p}{()}
+    \PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{obj}\PYG{o}{.}\PYG{n}{get\PYGZus{}attr}\PYG{p}{()}
+    \PYG{l+s+s1}{\PYGZsq{}a\PYGZsq{}}
+\end{Verbatim}

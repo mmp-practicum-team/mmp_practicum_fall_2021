@@ -1,0 +1,19 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{k}{class} \PYG{n+nc}{vector}\PYG{p}{(}\PYG{n+nb}{list}\PYG{p}{):}
+\PYG{o}{...}    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{some\PYGZus{}list}\PYG{p}{):}
+\PYG{o}{...}        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{values} \PYG{o}{=} \PYG{n}{some\PYGZus{}list}
+\PYG{o}{...}
+\PYG{o}{...}    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}add\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{other\PYGZus{}vector}\PYG{p}{):}
+\PYG{o}{...}        \PYG{k}{if} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{values}\PYG{p}{)} \PYG{o}{==} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{other\PYGZus{}vector}\PYG{o}{.}\PYG{n}{values}\PYG{p}{):}
+\PYG{o}{...}            \PYG{n}{new\PYGZus{}vector} \PYG{o}{=} \PYG{n}{vector}\PYG{p}{([])}
+\PYG{o}{...}            \PYG{k}{for} \PYG{n}{elem} \PYG{o+ow}{in} \PYG{n+nb}{zip}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{values}\PYG{p}{,}
+\PYG{o}{...}                               \PYG{n}{other\PYGZus{}vector}\PYG{o}{.}\PYG{n}{values}\PYG{p}{):}
+\PYG{o}{...}                \PYG{n}{new\PYGZus{}vector}\PYG{o}{.}\PYG{n}{values}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{elem}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{+} \PYG{n}{elem}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{])}
+\PYG{o}{...}            \PYG{k}{return} \PYG{n}{new\PYGZus{}vector}
+\PYG{o}{...}        \PYG{k}{else}\PYG{p}{:}
+\PYG{o}{...}            \PYG{k}{raise} \PYG{n+ne}{TypeError}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Wrong dimensions\PYGZsq{}}\PYG{p}{)}
+\PYG{o}{...}
+\PYG{o}{...}    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}getitem\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{i}\PYG{p}{):}
+\PYG{o}{...}        \PYG{k}{if} \PYG{l+m+mi}{0} \PYG{o}{\PYGZlt{}=} \PYG{n}{i} \PYG{o}{\PYGZlt{}=} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{values}\PYG{p}{):}
+\PYG{o}{...}            \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{values}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}
+\end{Verbatim}

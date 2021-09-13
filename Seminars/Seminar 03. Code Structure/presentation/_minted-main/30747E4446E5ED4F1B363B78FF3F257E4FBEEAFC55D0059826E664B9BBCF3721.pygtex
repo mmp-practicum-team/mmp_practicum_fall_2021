@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{x} \PYG{o}{=} \PYG{l+m+mi}{17}
+\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{k}{def} \PYG{n+nf}{f}\PYG{p}{():}
+\PYG{o}{...}    \PYG{n}{x} \PYG{o}{+=} \PYG{l+m+mi}{5}
+\PYG{n+ne}{UnboundLocalError}\PYG{p}{:} \PYG{n}{local} \PYG{n}{variable} \PYG{l+s+s1}{\PYGZsq{}x\PYGZsq{}} \PYG{n}{referenced} \PYG{n}{before}
+\PYG{n}{assignment}
+\end{Verbatim}

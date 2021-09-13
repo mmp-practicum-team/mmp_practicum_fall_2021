@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{k}{def} \PYG{n+nf}{f}\PYG{p}{(}\PYG{n}{x}\PYG{p}{):}
+\PYG{o}{...}    \PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}\PYGZdq{}This function does nothing\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{o}{...}    \PYG{k}{return} \PYG{n}{x}
+\end{Verbatim}

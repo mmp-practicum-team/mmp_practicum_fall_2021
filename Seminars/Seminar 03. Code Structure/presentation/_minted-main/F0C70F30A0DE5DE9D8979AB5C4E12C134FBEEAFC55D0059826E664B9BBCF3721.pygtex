@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{k+kn}{import} \PYG{n+nn}{my\PYGZus{}module} \PYG{k}{as} \PYG{n+nn}{mm}
+\end{Verbatim}

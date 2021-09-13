@@ -1,0 +1,17 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{k}{class} \PYG{n+nc}{MyClass}\PYG{p}{:}
+\PYG{o}{...}    \PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Documentaion\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{o}{...}    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{value}\PYG{p}{):}
+\PYG{o}{...}        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{value} \PYG{o}{=} \PYG{n}{value}
+\PYG{o}{...}
+\PYG{o}{...}    \PYG{k}{def} \PYG{n+nf}{one\PYGZus{}method}\PYG{p}{():}
+\PYG{o}{...}        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Do nothing\PYGZsq{}}\PYG{p}{)}
+\PYG{o}{...}
+\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{new\PYGZus{}obj} \PYG{o}{=} \PYG{n}{MyClass}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}
+\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{MyClass}\PYG{o}{.}\PYG{n+nv+vm}{\PYGZus{}\PYGZus{}name\PYGZus{}\PYGZus{}} \PYG{c+c1}{\PYGZsh{} имя}
+\PYG{l+s+s1}{\PYGZsq{}MyClass\PYGZsq{}}
+\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{MyClass}\PYG{o}{.}\PYG{n+nv+vm}{\PYGZus{}\PYGZus{}doc\PYGZus{}\PYGZus{}} \PYG{c+c1}{\PYGZsh{} документация}
+\PYG{l+s+s1}{\PYGZsq{}Documentaion\PYGZsq{}}
+\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{new\PYGZus{}obj}\PYG{o}{.}\PYG{n+nv+vm}{\PYGZus{}\PYGZus{}dict\PYGZus{}\PYGZus{}} \PYG{c+c1}{\PYGZsh{} атрибуты экземпляра}
+\PYG{p}{\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}value\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mi}{2}\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

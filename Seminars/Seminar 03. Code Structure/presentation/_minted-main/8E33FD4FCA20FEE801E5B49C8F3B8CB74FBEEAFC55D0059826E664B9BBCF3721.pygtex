@@ -1,0 +1,17 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{k}{class} \PYG{n+nc}{A}\PYG{p}{:}
+\PYG{o}{...}    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{value}\PYG{p}{):}
+\PYG{o}{...}        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{value} \PYG{o}{=} \PYG{n}{value}
+\PYG{o}{...}
+\PYG{o}{...}    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}setattr\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{name}\PYG{p}{,} \PYG{n}{value}\PYG{p}{):}
+\PYG{o}{...}        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}set atrribute\PYGZsq{}}\PYG{p}{,} \PYG{n}{value}\PYG{p}{)}
+\PYG{o}{...}        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n+nv+vm}{\PYGZus{}\PYGZus{}dict\PYGZus{}\PYGZus{}}\PYG{p}{[}\PYG{n}{name}\PYG{p}{]} \PYG{o}{=} \PYG{n}{value} \PYG{c+c1}{\PYGZsh{} словарь атрибутов}
+\PYG{o}{...}
+\PYG{o}{...}    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}getattr\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{name}\PYG{p}{):}
+\PYG{o}{...}        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}wrong attr\PYGZsq{}}\PYG{p}{)}
+\PYG{o}{...}
+\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{a} \PYG{o}{=} \PYG{n}{A}\PYG{p}{(}\PYG{l+m+mi}{123}\PYG{p}{)}
+\PYG{l+s+s1}{\PYGZsq{}set attribute 123\PYGZsq{}}
+\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{a}\PYG{o}{.}\PYG{n}{some\PYGZus{}attr}
+\PYG{l+s+s1}{\PYGZsq{}wrong attribute\PYGZsq{}}
+\end{Verbatim}

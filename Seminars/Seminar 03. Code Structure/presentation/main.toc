@@ -1,0 +1,5 @@
+\babel@toc {russian}{}
+\beamer@sectionintoc {1}{Функции}{3}{0}{1}
+\beamer@sectionintoc {2}{Модули}{19}{0}{2}
+\beamer@sectionintoc {3}{Классы}{27}{0}{3}
+\beamer@sectionintoc {4}{Элементы ООП в Python}{32}{0}{4}

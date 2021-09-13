@@ -1,0 +1,10 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{k}{def} \PYG{n+nf}{f}\PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{o}{*}\PYG{n}{args}\PYG{p}{,} \PYG{n}{age}\PYG{p}{):}
+\PYG{o}{...}    \PYG{k}{if} \PYG{n}{age} \PYG{o}{\PYGZlt{}} \PYG{l+m+mi}{18}\PYG{p}{:}
+\PYG{o}{...}        \PYG{k}{return} \PYG{l+m+mi}{0}
+\PYG{o}{...}    \PYG{k}{return} \PYG{n}{x} \PYG{o}{+} \PYG{n+nb}{sum}\PYG{p}{(}\PYG{n}{args}\PYG{p}{)}
+\PYG{o}{...}
+\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{f}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{20}\PYG{p}{)}
+\PYG{n+ne}{TypeError}\PYG{p}{:}
+\PYG{n}{f}\PYG{p}{()} \PYG{n}{missing} \PYG{l+m+mi}{1} \PYG{n}{required} \PYG{n}{keyword}\PYG{o}{\PYGZhy{}}\PYG{n}{only} \PYG{n}{argument}\PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}age\PYGZsq{}}
+\end{Verbatim}

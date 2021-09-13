@@ -1,0 +1,1107 @@
+\documentclass[fleqn, xcolor=x11names, 11pt]{beamer}
+\usetheme{MyAmsterdam} %тема\
+\usecolortheme{default}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage[OT1]{fontenc}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+%\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{graphics, graphicx}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{enumerate}
+
+% ДЛЯ НАПИСАНИЯ КОДА
+\usepackage{minted}
+\usemintedstyle{default}
+\newminted[pcode]{python}{baselinestretch=1, fontsize=\small}
+\newmintinline[pinline]{python3}{baselinestretch=1}
+
+\setbeamertemplate{navigation symbols}{} % отключить навигационные значки
+\setbeamertemplate{footline}{%
+    \hspace{0.94\paperwidth}%
+    \usebeamerfont{title in head/foot}%
+    \insertframenumber\,/\,\inserttotalframenumber%
+} % переопределить нижнуюю панель, убрать всё кроме номера слайда
+
+
+%\usefonttheme[onlylarge]{structurebold} % названия и текст в колонтитулах выводится полужирным шрифтом.
+\usefonttheme[onlymath]{serif}  % привычный шрифт для математических формул
+%\setbeamerfont*{frametitle}{size=\normalsize,series=\bfseries} % шрифт заголовков слайдов
+\usepackage[nopar]{lipsum} %для генерации большого текста
+
+
+\usepackage{tikz}
+\usetikzlibrary{arrows,positioning}
+\usepackage{listings}
+\lstset{language=Python}
+
+\newcommand{\real}{\mathbb{R}}
+\newcommand{\norm}{\mathop{\rm norm}\limits}
+\newcommand{\softmax}{\mathop{\rm softmax}\limits}
+
+\definecolor{beamer@blendedblue}{rgb}{0.037,0.366,0.75}
+
+\title[Введение в Python]{\bfseries Занятие 3: Функции. Модули. Классы.}
+%\author[Попов~А.\,С.]{Попов Артём Сергеевич}
+\subtitle{Практикум на ЭВМ, осень 2021}
+\institute[ВМК МГУ]{МГУ имени М. В. Ломоносова, факультет ВМК, кафедра ММП}
+\date{13 сентября 2021}
+
+\begin{document}
+
+\begin{frame}
+\maketitle
+\end{frame} 
+
+
+\begin{frame}[fragile]\frametitle{Организация кода}
+
+Функции, модули, пакеты, классы устраняют необходимость вставлять в программу избыточные копии блоков одинакового кода.
+
+\hfill
+
+Грамотная организация кода позволяет:
+\begin{itemize}
+\item Повысить частоту использование кода 
+
+\item Минимизировать избыточность кода
+
+\item Упростить отладку кода
+
+\item Упростить написание тестов 
+
+\item Улучшить читаемость кода (в том числе не автором кода)
+
+\item Улучшить логику кода
+\end{itemize}
+
+
+
+\end{frame}
+
+
+\section{Функции}
+\subsection*{}
+\begin{frame}[fragile]\frametitle{Синтаксис}
+
+Определение функции:
+
+\begin{minted}{python}
+>>> def f(x):
+...    """This function does nothing"""
+...    return x
+\end{minted}
+
+\hfill
+
+У аргументов функции могут быть значения по умолчанию:
+(такие аргументы всегда идут в конце)
+\begin{pcode}
+>>> def f(x, y, z=0):
+...    return x + y * z
+\end{pcode}
+
+\hfill
+
+При вызове функции могут использоваться именованные аргументы (всегда идут за позиционными):
+\begin{pcode}
+>>> f(1, 2)
+>>> f(1, z=2, y=1)
+\end{pcode}
+
+\hfill
+\end{frame}
+
+
+
+\begin{frame}[fragile]\frametitle{Методы функции}
+Всё в Python --- объект, функция тоже объект!
+
+\hfill
+
+У функции есть некоторые атрибуты:
+\begin{pcode}
+>>> f.__doc__
+"This function does nothing"
+>>> f.__dict__ # список атрибутов функции
+{}
+\end{pcode}
+
+\hfill
+
+Функция со счётчиком запусков:
+\begin{pcode}
+>>> def f(x):
+>>>    """This function does nothing"""
+...    if 'f_count' in f.__dict__:
+...        f.f_count += 1
+...    else:
+...        f.f_count = 1
+...    return x
+\end{pcode}
+
+\end{frame}
+
+
+\begin{frame}[fragile]\frametitle{Значения по умолчанию: проблемы}
+
+Не нужно использовать изменяемые объекты в качестве значений по умолчанию:
+\begin{pcode}
+
+>>> def function(list_of_items, my_set=set()):
+...     final_list = list()
+...     for item in list_of_items:
+...         if item not in my_set:
+...             my_set.add(item)
+...             final_list.append(item)
+...     return final_list
+...
+\end{pcode}
+\pause{
+\begin{pcode}
+>>> my_list = [1, 2, 3]
+>>> function(my_list)
+[1, 2, 3]
+>>> function(my_list)
+[]
+\end{pcode}
+}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Функции с переменным числом аргументов}
+У функции может быть переменное число неименованных и именованных аргументов:
+\begin{pcode}
+
+>>> def f(*args, **kwargs):
+...    if 'x' in kwargs:
+...        print(kwargs['x'])
+...    print(args)
+...    print(kwargs)
+...
+>>> f(3, 1, 7, x=1, y=8)
+1
+(3, 1, 7)
+{'x': 1, 'y': 8}
+\end{pcode}
+\end{frame}
+
+
+
+\begin{frame}[fragile]\frametitle{Пример: функция минимума}
+
+Функция минимума из двух элементов:
+\begin{pcode}
+
+>>> def min(x, y):
+...     return x if x < y else y
+\end{pcode}
+
+\hfill
+
+Функция минимума для произвольного числа аргументов:
+\begin{pcode}
+>>> def min(*args):
+...     res = float('inf')
+...     for arg in args:
+...         if arg < res:
+...             res = arg
+...     return res
+\end{pcode}
+
+\hfill
+
+\textcolor{red}{У такой реализации есть проблема:}
+\pause{
+\begin{pcode}
+>>> min()
+inf
+\end{pcode}
+}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Ограничения на аргументы}
+
+Более правильная реализация с обязательным аргументом:
+\begin{pcode}
+>>> def min(first, *args):
+...     res = first
+...     for arg in args:
+...         if arg < res:
+...             res = arg
+...     return res
+\end{pcode}
+
+Аргументы могу быть строго именованными:
+\begin{pcode}
+>>> def f(x, *args, age):
+...    if age < 18:
+...        return 0
+...    return x + sum(args) 
+...
+>>> f(1, 2, 20)
+TypeError:
+f() missing 1 required keyword-only argument: 'age'
+\end{pcode}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Преобразование контейнеров в аргументы}
+\mintinline{python}{*} перед <<контейнером>> преобразует его в аргументы функции
+\begin{pcode}
+>>> my_list = [1, 2, 3]
+>>> # две эквивалентные записи
+>>> f(my_list[0], my_list[1], my_list[2])
+>>> f(*my_list)
+\end{pcode} 
+
+\hfill
+
+\mintinline{python}{zip()} соединяет несколько <<контейнеров>> в <<контейнер>> кортежей:
+\begin{pcode}
+>>> your_list = ['a', 'b', 'c']
+>>> t = list(zip(my_list, your_list))
+>>> t
+[(1, 'a'), (2, 'b'), (3, 'c')]
+\end{pcode} 
+
+\hfill
+
+Обратное преобразование с использованием \mintinline{python}{*}:
+\begin{pcode}
+>>> list(zip(*t))
+[(1, 2, 3), ('a', 'b', 'c')]
+\end{pcode} 
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Области видимости}
+\hfill
+
+\textbf{Область видимости} --- место, где определяются переменные и выполняется их поиск. 
+
+\hfill
+
+Правило LEGB --- последовательный поиск имени в 4~областях:
+\begin{enumerate}
+\item[L] --- local (все имена, которым присваиваются значения внутри функции)
+
+\item[E] --- enclosing (локальные области объемлющих функций) 
+
+\item[G] --- global (имена на верхнем уровне модуля)
+
+\item[B] --- built-in (встроенные имена)
+\end{enumerate}
+
+\hfill
+
+Явное изменение области видимости имени (L на E):
+\begin{pcode}
+>>> def f():
+... nonlocal y     # global y (L на G)
+... y += 1
+\end{pcode}
+
+\hfill
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Пример работы LEGB}
+\begin{pcode}
+>>> x = 50
+>>> y = 1
+>>> def enc_func(x):
+...    y = 30
+...    def func(y):
+...        nonlocal x
+...        print(x + y)
+...    func(11)
+...
+>>> enc_func(5)
+???
+\end{pcode}
+\pause{
+\begin{pcode}
+16
+\end{pcode}
+}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Для присваиваний LEGB не работает}
+Операция присваивания по умолчанию создаёт локальную переменную:
+
+\begin{pcode}
+>>> x = 17
+>>> def f():
+...    x += 5
+UnboundLocalError: local variable 'x' referenced before
+assignment
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Анонимные (lambda) функции}
+Когда нужно передать функцию в качестве аргумента или сделать короткую операцию несколько раз:
+
+\hfill
+
+\begin{pcode}
+lambda x: x ** 2 + x - 1
+\end{pcode}
+{\Large $$ \sim $$}
+\begin{pcode}
+>>> def f(x):
+...     return x ** 2 + x - 1
+\end{pcode} 
+
+\hfill
+
+Можно (но не нужно) присвоить переменной лямбду:
+\begin{pcode}
+>>>    f = lambda x: x ** 2
+>>>    f(2)
+4
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Применение lambda функций}
+Использование анонимной функции в функции sorted:
+
+\begin{pcode}
+>>> l = [(1, 0), (1, 1), (1, 2), (0, 3), (2, 1)]
+>>> # по умолчанию сортируется по первому элементу
+>>> sorted(l)
+[(0, 3), (1, 0), (1, 1), (1, 2), (2, 1)]
+
+>>> # сортируется по второму элементу
+>>> sorted(l, key=lambda x: x[1])
+[(1, 0), (1, 1), (2, 1), (1, 2), (0, 3)]
+
+>>> # сортируется по произведению
+>>> sorted(l, key=lambda x: x[0] * x[1])
+[(1, 0), (0, 3), (1, 1), (1, 2), (2, 1)]
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Рекомендации по функциям}
+\begin{itemize}
+	\item По умолчанию возвращается \pinline{None}, не нужно писать отдельно \pinline{return None}.
+	\item Не увлекайтесь возможностям динамической типизации: ограничивайте типы аргументов и выходов функции.
+	\item Не делайте очень много аргументов. Заводите отдельные структуры данных для хранения большого количества информации.
+\end{itemize}
+	
+\end{frame}
+
+\section{Модули}
+\subsection*{}
+
+\begin{frame}[fragile]\frametitle{Синтаксис}
+
+Модуль --- файл с расширением .py
+
+\hfill
+
+Оператор \mintinline{python}{import} импортирует указанный модуль и создаёт на него ссылку в текущей области видимости:
+
+\begin{pcode}
+>>> import my_module
+>>> my_module.function_in_module()
+\end{pcode}
+
+\hfill
+
+С помощью оператора \mintinline{python}{as} можно изменить имя переменной, в которую будет записана ссылка на модуль:
+
+\begin{pcode}
+>>> import my_module as mm
+\end{pcode}
+
+\hfill
+
+С помощью связки \mintinline{python}{from ... import} можно импортировать имя из другого модуля в текущую область видимости:
+
+\begin{pcode}
+>>> from my_module import function_in_module
+\end{pcode}
+
+\hfill
+
+\end{frame}
+
+
+\begin{frame}[fragile]\frametitle{Ещё о модулях}
+
+Если в втором аргументе \mintinline{python}{from ... import} указать *, импортируются все глобальные имена модуля или все переменные, записанные в \mintinline{python}{__all__}
+
+\hfill
+
+У модуля есть некоторые атрибуты:
+
+\begin{pcode}
+>>> import my_module
+>>> my_module.__name__
+'my_module'
+>>> my_module.__file__
+'/home/user/Programs/my_module.py'
+\end{pcode}
+
+\hfill
+
+У модулей, переданных на выполнение интерпретатору, \mintinline{python}{__name__} == \mintinline{python}{__main__}
+
+
+\end{frame}
+
+
+\begin{frame}[fragile]\frametitle{Импортирование модуля}
+
+Что происходит при импортировании модуля:
+
+\begin{enumerate}
+
+\item Поиск файла модуля
+
+(по умолчанию по директориям, находящимся в переменной  \mintinline{python}{sys.path})
+
+\item Компиляция в байт-код
+
+(если нет актуальной скомпилированной версии модуля)
+
+\item Запуск программного кода модуля
+
+\end{enumerate}
+
+\hfill
+
+Если в модуле что-то изменилось, его необходимо перегрузить:
+
+\begin{pcode}
+>>> import imp
+>>> imp.reload(my_module)
+\end{pcode}
+
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Магическая команда \texttt{\% autoreload}}
+\begin{itemize}
+	\item \texttt{\%autoreload 2} --- перезагружать все модули при выполнении кода (кроме прописанных в \texttt{\%aimport-foo})
+    \item \texttt{\%autoreload 1} --- перезагружать все модули загруженные с помошью  \texttt{\%aimport}, при выполнении кода 
+    \item \texttt{\%autoreload 0} --- отключить автоматическую перезагрузку
+    \item \texttt{\%aimport foo} --- импортировать \texttt{foo} и включить для него автоматическую перезагрузку
+    \item  \texttt{\%aimport -foo} --- выключить для \texttt{foo} перезагрузку
+\end{itemize}
+ 
+\hfill
+
+\begin{pcode}
+>>> %load_ext autoreload
+>>> %autoreload 1
+>>> %aimport module
+>>> module.variable
+5
+>>> # изменили модуль
+>>> module.variable
+7
+\end{pcode}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Когда \texttt{\_\_name\_\_ == \_\_main\_\_}}
+
+Модуль может содержать не только функции или классы, но и исполняющие их инструкции.
+
+Чтобы эта часть кода не выполнялась при импорте, её заключают в специальный блок:
+
+\begin{pcode}
+def sin(x):
+    return x - x ** 3 / 6
+
+if __name__ == '__main__':
+    print('test my method')
+    print(sin(3.14))
+    print(sin(0))
+    print('end of test')
+\end{pcode}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{От модулей к пакетам}
+Пакет --- каталог, включающий в себя другие каталоги и модули, содержащий файл \texttt{\_\_init\_\_.py}.
+	
+\hfill
+	
+Пакеты позволяют организовать импорт <<через точку>>:
+
+\begin{pcode}
+>>> from numpy.random import randn
+\end{pcode}
+	
+\hfill
+		
+Также пакеты позволяют организовать относительный импорт:
+\begin{pcode}
+>>> from .my_module import my_function
+>>> from ..another_package.its_module import its_function
+\end{pcode}
+
+\hfill
+
+Файл \texttt{\_\_init\_\_.py} может использоваться для изменения поведения импорта.
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Пример использования \texttt{\_\_init\_\_.py}}
+Пусть файлы проекта устроены так:
+\begin{verbatim}
+package:
+    __init__.py
+    first_module.py
+        def f1
+        def f2
+\end{verbatim}
+
+\hfill
+
+Файл \texttt{\_\_init\_\_.py} устроен так:
+\begin{pcode}
+>>> from .first_module import f1
+\end{pcode}
+
+\hfill
+
+Тогда можно делать так:
+\begin{pcode}
+>>> from package import f1
+\end{pcode}
+
+\end{frame}
+
+\begin{frame}{Рекомендации по модулям и пакетам}
+	\begin{itemize}
+		\item Всегда организовывайте код в модули, объединяйте логические связанные модули в пакеты
+		\item В пакетах крайне желательно использовать относительный импорт
+		\item Осторожно делайте перекрёстные импорты между пакетами и модулями, чтобы не получить циклический импорт
+	\end{itemize}
+\end{frame}
+\section{Классы}
+\subsection*{}
+
+\begin{frame}[fragile]\frametitle{Синтаксис}
+Объявление класса:
+\begin{pcode}
+>>> class MyClass:
+...    def __init__(self, value):    # конструктор класса
+...        self.value = value
+...    
+...    def get_value(self):
+...        return self.value 
+\end{pcode}
+
+\hfill
+
+При вызове класса порождается его экземпляр:
+\begin{pcode}
+>>> new_obj = MyClass(2)
+\end{pcode}
+
+\hfill
+
+Каждый объект экземпляра наследует атрибуты класса и  приобретает
+свое собственное пространство имен
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Атрибуты экземпляров класса}
+
+Атрибут класса $\neq$ атрибут экземпляра
+
+\hfill
+
+Атрибуты экземпляра добавляются к экземпляру с помощью использования self или прямым присваиванием к экземпляру:  
+\begin{pcode}
+>>> class MyClass:
+...    def __init__(self, value):
+...        self.value = value
+...    
+>>> new_obj = MyClass(2)
+>>> new_obj.obj_attr = -2
+\end{pcode}
+
+\hfill
+
+\mintinline{python}{value} и \mintinline{python}{obj_attr} --- атрибуты экземпляра класса
+
+\hfill
+
+\end{frame}
+
+
+\begin{frame}[fragile]\frametitle{Атрибуты класса}
+
+Атрибут класса $\neq$ атрибут экземпляра
+
+\hfill
+
+Атрибуты класса объявляются в теле класса или прямым присваиванием к классу. Изменение атрибута класса отразится на всех его экземплярах:
+
+\begin{pcode}
+>>> class MyClass:
+...    class_attr = 0
+...    def __init__(self, value):
+...        self.value = value
+...    
+>>> new_obj = MyClass(2)
+>>> MyClass.second_class_attr = '127'
+>>> new_obj.second_class_attr
+'127'
+\end{pcode}
+
+\hfill
+
+\mintinline{python}{class_attr} и \mintinline{python}{second_class_attr} --- атрибуты класса
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Связанные и несвязанные методы}
+У связанного метода первый аргумент --- соответствующий экземпляр класса:
+\begin{pcode}
+>>> class MyClass:
+...    def my_method(self):
+...        print('Do nothing')
+...
+>>> new_obj = MyClass()
+>>> new_obj.my_mehtod() # связанный метод
+'Do nothing'
+\end{pcode}
+
+\hfill
+
+Несвязанному методу необходимо явно передать первым аргументом экземпляр класса:
+\begin{pcode}
+>>> the_same_method = MyClass.my_method # несвязанный метод
+>>> the_same_method()
+TypeError: my_method() missing 1 required positional 
+argument: 'self'
+>>> the_same_method(new_obj)
+'Do nothing'
+\end{pcode}
+
+\hfill
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Внутренние атрибуты классов и экземпляров}
+
+\begin{pcode}
+>>> class MyClass:
+...    """Documentaion"""
+...    def __init__(self, value):
+...        self.value = value
+...        
+...    def one_method():
+...        print('Do nothing')
+...
+>>> new_obj = MyClass(2)
+>>> MyClass.__name__ # имя
+'MyClass'
+>>> MyClass.__doc__ # документация
+'Documentaion'
+>>> new_obj.__dict__ # атрибуты экземпляра
+{'value': 2}
+\end{pcode}
+
+
+\end{frame}
+
+\section{Элементы ООП в Python}
+\subsection*{}
+
+\begin{frame}[fragile]\frametitle{ООП в Python}
+Классы --- основной инструмент ООП в Python
+
+\hfill
+
+Основные принципы ООП (wiki):
+
+\begin{itemize}
+\item Полиморфизм --- свойство системы, позволяющее использовать объекты с одинаковым интерфейсом без информации о типе и внутренней структуре объекта
+
+\item Инкапсуляция --- свойство системы, позволяющее объединить данные и методы, работающие с ними, в классе и ограничить к ним доступ.
+
+\item Наследование --- свойство системы, позволяющее описать новый класс на основе уже существующего с частично или полностью заимствующейся функциональностью
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Наследование}
+
+Класс может наследовать другие классы:
+\begin{pcode}
+>>> class Soldier:
+...    def run(self):
+...        print('run run')
+...        
+...    def shoot(self):
+...        print('shoot shoot')
+...    
+>>> class Captain(Soldier):
+...    def command(self, other_soldier):
+...        other_soldier.run()
+...
+>>> s1 = Soldier()
+>>> s2 = Captain()
+>>> s2.command(s1)
+'run run'
+>>> s2.shoot()
+'shoot shoot'
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Пример конфликтной ситуации}
+
+\begin{pcode}
+    >>> class A:
+    ...    def get_attr(self):
+    ...        return 'a'
+    ...
+    >>> class B:
+    ...    def get_attr(self):
+    ...        return 'b'
+    ...
+    >>> class C(A, B):
+    ...     pass
+    ...
+    >>> obj = C()
+    >>> obj.get_attr()
+    'a'
+\end{pcode}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Разрешение конфликтов имён}
+
+При обращении к атрибуту/методу экземпляра поиск ведётся:
+
+\begin{enumerate}
+\item В самом экземпляре
+\item В классе экземпляра
+\item По иерархии наследования
+\end{enumerate}
+
+\hfill
+
+При множественном наследовании Python использует алогритм линеаризации C3 для определения вызываемого метода. Получить порядок:
+\begin{pcode}
+>>> C.__mro__
+__main__.C, __main__.A, __main__.B, object
+\end{pcode}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Перегрузка конструктора наследника}
+Если у класса-наследника определён метод \mintinline{python}{__init__}, конструкторы родителей необходимо вызывать явно:
+
+\begin{pcode}
+class Soldier:
+    def __init__(self, speed=0):
+        self.speed = speed
+    
+    def run(self):
+        print('run ' * self.speed)
+            
+class Captain(Soldier):
+    def __init__(self, speed=0, wisdom=0):
+        Soldier.__init__(self, speed)
+        self.wisdom = wisdom
+        
+    def command(self, other_soldier):
+        for i in range(self.wisdom):
+            other_soldier.run()
+\end{pcode}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Перегрузка конструктора наследника}
+Другая реализация через  \mintinline{python}{super()}
+(позволяет вызывать методы предков):
+\begin{pcode}
+class Soldier:
+    def __init__(self, speed=0):
+        self.speed = speed
+    
+    def run(self):
+        print('run ' * self.speed)
+            
+class Captain(Soldier):
+    def __init__(self, speed=0, wisdom=0):
+        super().__init__(speed)
+        self.wisdom = wisdom
+        
+    def command(self, other_soldier):
+        for i in range(self.wisdom):
+            other_soldier.run()
+\end{pcode}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Классы-примеси (mixin)}
+
+    Если известно, что класс реализует некоторый интерфейс, можно использовать классы-примеси для его модификации: 
+    
+\begin{pcode}
+    >>> def get_speed(self):
+    ...     return self.speed
+    >>> Soldier.get_speed = get_speed
+    ...
+    >>> class Speed_calculations_mixin:
+    ...    def get_distance(self, time_sec):
+    ...        return super().get_speed() * time_sec
+    ...    
+    ...    def get_time(self, distance):
+    ...        return distance / super().get_speed()
+    ...
+    >>> class Major(Speed_calculations_mixin, Captain):
+    ...    pass        
+    \end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Абстрактные методы}
+
+Пример абстрактного метода:
+
+\begin{pcode}
+class Quadrilateral:
+    def __init__(self, coords):
+        self.coords = coords
+    def square():
+        raise NotImplementedError("Implement this method")     
+\end{pcode}
+\end{frame}
+
+
+\begin{frame}[fragile]\frametitle{Перегрузка операторов}
+
+Перегрузка операторов реализуется за счёт написания \textit{специальных методов} (\mintinline{python}{__method__})
+
+\hfill
+
+Некоторые из них:
+
+\begin{itemize}
+\item \mintinline{python}{__init__} --- вызывается при создании нового экземпляра
+
+\item \mintinline{python}{__add__} --- вызывается при сложении экземпляров
+
+\item \mintinline{python}{__repr__} --- вызывается при выводе объекта
+
+\item \mintinline{python}{__getattr__} --- вызывается при попытке прочитать
+значение несуществующего атрибута
+
+\item \mintinline{python}{__getitem__} --- взятие элемента по индексу
+
+\end{itemize}
+
+Полный список:
+\href{https://docs.python.org/3/reference/datamodel.html\#special-method-names}{https://docs.python.org/3/reference/datamodel.html\#special-method-names}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Пример перегрузки операторов}
+\begin{pcode}
+>>> class vector(list):
+...    def __init__(self, some_list):
+...        self.values = some_list
+...    
+...    def __add__(self, other_vector):
+...        if len(self.values) == len(other_vector.values):
+...            new_vector = vector([])
+...            for elem in zip(self.values,
+...                               other_vector.values):
+...                new_vector.values.append(elem[0] + elem[1])
+...            return new_vector
+...        else:
+...            raise TypeError('Wrong dimensions')
+...            
+...    def __getitem__(self, i):
+...        if 0 <= i <= len(self.values):
+...            return self.values[i]
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Сокрытие атрибутов}
+В Python нет модификторов доступа к атрибутам и методам
+
+\hfill
+
+К внутренним атрибутам принято добавлять в начале символ подчёркивания:
+
+\begin{pcode}
+>>> class MyClass:
+...    _important_attr = 32
+\end{pcode}
+
+\hfill
+
+При добавлении двух подчёркиваний атрибут будет автоматически получать более сложное название:
+
+\begin{pcode}
+>>> class MyClass:
+...    __very_important_attr = 32
+...
+>>> x = MyClass()
+>>> x.__very_important_attr 
+AttributeError: 'MyClass' object has no attribute ...
+>>> x._MyClass__very_important_attr 
+32
+\end{pcode}
+
+
+\end{frame}
+
+
+
+\begin{frame}[fragile]\frametitle{Сокрытие атрибутов --- перегрузка операторов}
+Для ограничения доступа к атрибутам можно перегрузить операторы  \mintinline{python}{__setattr__} и \mintinline{python}{__getattr__}  :
+\begin{pcode}
+>>> class A:
+...    def __init__(self, value):
+...        self.value = value
+...
+...    def __setattr__(self, name, value):
+...        print('set atrribute', value)
+...        self.__dict__[name] = value # словарь атрибутов
+...
+...    def __getattr__(self, name):
+...        print('wrong attr')
+...       
+>>> a = A(123)
+'set attribute 123'
+>>> a.some_attr
+'wrong attribute'
+\end{pcode}
+
+
+\end{frame}
+
+
+
+\begin{frame}[fragile]\frametitle{Свойства}
+Протокол свойств позволяет направлять операции чтения, записи и удаления для отдельных атрибутов отдельным функциям и методам
+
+\hfill
+
+\mintinline{python}{attribute = property(fget, fset, fdel, doc)}
+
+\hfill
+\begin{itemize}
+
+\item \mintinline{python}{fget} --- функция, которая будет вызываться при попытке прочитать значение атрибута
+
+\item \mintinline{python}{fset} --- функция, которая будет вызываться при попытке выполнить операцию присваивания
+
+\item \mintinline{python}{fdel} --- функция, которая будет вызываться при попытке удалить атрибут. 
+
+\item \mintinline{python}{doc} --- передается строка документирования с описанием атрибута
+
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}[fragile]\frametitle{Сокрытие атрибутов --- свойства}
+\begin{pcode}
+>>> class A:
+...    def __init__(self, value):
+...        self._value = value
+...    
+...    def get_val(self):
+...        return self._value
+...    
+...    def set_val(self, value):
+...        print('set atribute', value)
+...        self._value = value
+...        
+...    value = property(get_val, set_val, None, "no doc")
+...
+>>> a = A(123)
+>>> a.value = -1
+'set atribute -1'
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Атрибут \texttt{\_\_slots\_\_}}
+С помощью атрибута \mintinline{python}{__slots__} можно зафиксировать множество возможных атрибутов:
+
+\begin{pcode}
+>>> class Point:
+...    __slots__ = ['x', 'y']
+...    
+...    def __init__(self, x, y):
+...        self.x = x
+...        self.y = y
+...        
+...    def get_r(self):
+...        return (self.x ** 2 + self.y ** 2) ** 0.5
+...
+>>> m = Point(3, 4)
+>>> m.z = 5
+AttributeError: 'Point' object has no attribute 'z'
+\end{pcode}
+
+Экземпляры с \mintinline{python}{__slots__} требуют меньше памяти (если в \mintinline{python}{__slots__} нет \mintinline{python}{__dict__})
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Классы для реализации алгоритмов}
+Основные сущности, с которыми мы будем работать:
+
+\begin{itemize}
+    \item Конкретное семейство алгоритмов --- класс
+    
+    \item Алгоритм из семейства с заданными параметрами --- экземпляр класса 
+    
+    \item Алгоритм обучения --- метод класса (\mintinline{python}{.fit})
+    
+    \item Получение предсказаний --- метод класса (\mintinline{python}{.predict})
+\end{itemize}
+
+\hfill
+
+Какие преимущества у класса перед набором функций для реализации алгоритма?
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Библиотека scikit-learn}
+Де-факто задала стандарт интерфейсов для алгоритмов машинного обучения.
+
+\hfill
+
+Сайт библиотеки: \href{http://scikit-learn.org/stable/}{http://scikit-learn.org/stable/}
+
+\begin{itemize}
+    \item[+] Огромное количество реализаций алгоритмов классификации, регрессии, кластеризации и т.д.
+    \item[+] Отличная документация
+    \item[--] Не всегда эффективные реализации
+\end{itemize}
+\end{frame}
+
+\section*{}
+\subsection*{}
+\begin{frame}[fragile]\frametitle{Заключение}
+
+Несколько важных замечаний:
+
+\begin{itemize}
+\item Функции, модули и классы являются объектами в Python
+
+\item У функции может быть несколько аргументов
+
+\item Модули выполняются при импортировании!
+
+\item Класс и объект класса не одно и то же!
+
+\item Частично скрывать атрибуты класса возможно, полностью нет
+
+\end{itemize}
+\end{frame}
+
+
+\end{document}

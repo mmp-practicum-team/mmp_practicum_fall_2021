@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{f}\PYG{o}{.}\PYG{n+nv+vm}{\PYGZus{}\PYGZus{}doc\PYGZus{}\PYGZus{}}
+\PYG{l+s+s2}{\PYGZdq{}This function does nothing\PYGZdq{}}
+\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{f}\PYG{o}{.}\PYG{n+nv+vm}{\PYGZus{}\PYGZus{}dict\PYGZus{}\PYGZus{}} \PYG{c+c1}{\PYGZsh{} список атрибутов функции}
+\PYG{p}{\PYGZob{}\PYGZcb{}}
+\end{Verbatim}
