@@ -34,6 +34,8 @@
 | :---: | :---: | --- | --- | --- |
 | 02 сентября | 1  | <ul><li>Введение в Python</li></ul> | [Введение в Python](Seminars/Seminar%2001.%20Intro%20to%20Python) | Контест 1: Python |
 | 09 сентября | 2  | <ul><li>Векторизация и библиотека Numpy </li></ul> | [Векторизация с помощью Numpy](Seminars/Seminar%2002.%20Vectorization%20with%20Numpy) | Контест 2: Numpy |
+| 13 сентября | 3  | <ul><li>Функции, модули, классы</ul></li>| [Функции, модули, классы](Seminars/Seminar%2003.%20Code%20Structure/Code%20structure.pdf) | Контест 3: -  |
+
 
 
 
