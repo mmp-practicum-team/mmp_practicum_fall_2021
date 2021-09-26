@@ -18,9 +18,11 @@
 
 ## Материалы
 
-* Видеозаписи практикумов 2020/2021 года можно посмотреть [в этом плейлисте](https://www.youtube.com/playlist?list=PLVF5PzSHILHRAmJXJvv6_PFzfHf-Zc09Z)
+* Видеозаписи практикума 2021/2022 года можно посмотреть [в этом плейлисте](https://www.youtube.com/playlist?list=PLVF5PzSHILHRFVzwMIiwAICPf3CQwN9Jm)
 
 * Материалы прошлого года можно посмотреть [в этом репозитории](https://github.com/mmp-practicum-team/mmp_practicum_fall_2020)
+
+* Видеозаписи практикума прошлого года (2020/2021) можно посмотреть [в этом плейлисте](https://www.youtube.com/playlist?list=PLVF5PzSHILHRAmJXJvv6_PFzfHf-Zc09Z)
 
 * Большие практические задания [выкладываются здесь](https://github.com/mmp-practicum-team/mmp_practicum_fall_2021/tree/main/Tasks)
 
@@ -35,6 +37,7 @@
 | 02 сентября | 1  | <ul><li>Введение в Python</li></ul> | [Введение в Python](Seminars/Seminar%2001.%20Intro%20to%20Python) | Контест 1: Python |
 | 09 сентября | 2  | <ul><li>Векторизация и библиотека Numpy </li></ul> | [Векторизация с помощью Numpy](Seminars/Seminar%2002.%20Vectorization%20with%20Numpy) | Контест 2: Numpy |
 | 13 сентября | 3  | <ul><li>Функции, модули, классы</ul></li>| [Функции, модули, классы](Seminars/Seminar%2003.%20Code%20Structure/Code%20structure.pdf) | Контест 3: -  |
+| 20 сентября | 4  | <ul><li>Введение в обработку изображений</ul></li><ul><li>K-NN</ul></li>| [Обработка изображений, K-NN](Seminars/Seminar%2004.%20Image%20processing%20and%20KNN) | ...  |
 
 
 
