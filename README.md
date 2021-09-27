@@ -38,6 +38,7 @@
 | 09 сентября | 2  | <ul><li>Векторизация и библиотека Numpy </li></ul> | [Векторизация с помощью Numpy](Seminars/Seminar%2002.%20Vectorization%20with%20Numpy) | Контест 2: [Векторизация вычислений с помощью библиотеки Numpy](https://contest.yandex.ru/contest/29105/enter/) |
 | 13 сентября | 3  | <ul><li>Функции, модули, классы</ul></li>| [Функции, модули, классы](Seminars/Seminar%2003.%20Code%20Structure/Code%20structure.pdf) | Контест 3: [Классы](https://contest.yandex.ru/contest/29365/enter/) |
 | 20 сентября | 4  | <ul><li>Введение в обработку изображений</li><li>K-NN</ul></li> | [Обработка изображений, K-NN](Seminars/Seminar%2004.%20Image%20processing%20and%20KNN) | <ul><li>[Практическое задание 1: Метрические алгоритмы классификации](Tasks/Task%2001/task_01.pdf)</li><li>Контест: [Метрические алгоритмы классификации](https://contest.yandex.ru/contest/29623/enter/)</ul></li> |
+| 27 сентября | 5 | <ul><li>Составление отчётов</li><li>Система TeX</ul></li> | [Составление отчётов, Система TeX](Seminars/Seminar%2005.%20Reports%20and%20TeX) | ＼(٥⁀▽⁀ )／ |
 
 
 
