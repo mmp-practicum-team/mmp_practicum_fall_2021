@@ -34,10 +34,10 @@
 
 | Дата | Номер | Тема | Материалы | ДЗ |
 | :---: | :---: | --- | --- | --- |
-| 02 сентября | 1  | <ul><li>Введение в Python</li></ul> | [Введение в Python](Seminars/Seminar%2001.%20Intro%20to%20Python) | Контест 1: Python |
-| 09 сентября | 2  | <ul><li>Векторизация и библиотека Numpy </li></ul> | [Векторизация с помощью Numpy](Seminars/Seminar%2002.%20Vectorization%20with%20Numpy) | Контест 2: Numpy |
-| 13 сентября | 3  | <ul><li>Функции, модули, классы</ul></li>| [Функции, модули, классы](Seminars/Seminar%2003.%20Code%20Structure/Code%20structure.pdf) | Контест 3: -  |
-| 20 сентября | 4  | <ul><li>Введение в обработку изображений</ul></li><ul><li>K-NN</ul></li>| [Обработка изображений, K-NN](Seminars/Seminar%2004.%20Image%20processing%20and%20KNN) | [Практическое задание 1: Метрические алгоритмы классификации](Tasks/Task01/task01.pdf)  |
+| 02 сентября | 1  | <ul><li>Введение в Python</li></ul> | [Введение в Python](Seminars/Seminar%2001.%20Intro%20to%20Python) | Контест 1: [Введение в язык Python](https://contest.yandex.ru/contest/28967/problems/) |
+| 09 сентября | 2  | <ul><li>Векторизация и библиотека Numpy </li></ul> | [Векторизация с помощью Numpy](Seminars/Seminar%2002.%20Vectorization%20with%20Numpy) | Контест 2: [Векторизация вычислений с помощью библиотеки Numpy](https://contest.yandex.ru/contest/29105/problems/) |
+| 13 сентября | 3  | <ul><li>Функции, модули, классы</ul></li>| [Функции, модули, классы](Seminars/Seminar%2003.%20Code%20Structure/Code%20structure.pdf) | Контест 3: [Классы](https://contest.yandex.ru/contest/29365/problems/) |
+| 20 сентября | 4  | <ul><li>Введение в обработку изображений</ul></li><ul><li>K-NN</ul></li>| [Обработка изображений, K-NN](Seminars/Seminar%2004.%20Image%20processing%20and%20KNN) | <ul><li>[Практическое задание 1: Метрические алгоритмы классификации](Tasks/Task01/task01.pdf)</li>Контест: <li>[Метрические алгоритмы классификации](https://contest.yandex.ru/contest/29623/problems/)</ul></li> |
 
 
 
