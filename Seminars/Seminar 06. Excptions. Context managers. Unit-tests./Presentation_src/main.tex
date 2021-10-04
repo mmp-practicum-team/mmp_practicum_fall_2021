@@ -1,0 +1,825 @@
+\documentclass[fleqn, xcolor=x11names]{beamer}
+\usetheme{MyAmsterdam} %тема\
+\usecolortheme{default}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage[OT1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+%\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{graphics, graphicx}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{enumerate}
+\usepackage{minted}
+\usemintedstyle{default}
+
+\setbeamertemplate{navigation symbols}{} % отключить навигационные значки
+\setbeamertemplate{footline}{%
+    \hspace{0.94\paperwidth}%
+    \usebeamerfont{title in head/foot}%
+    \insertframenumber\,/\,\inserttotalframenumber%
+} % переопределить нижнуюю панель, убрать всё кроме номера слайда
+
+
+%\usefonttheme[onlylarge]{structurebold} % названия и текст в колонтитулах выводится полужирным шрифтом.
+\usefonttheme[onlymath]{serif}  % привычный шрифт для математических формул
+%\setbeamerfont*{frametitle}{size=\normalsize,series=\bfseries} % шрифт заголовков слайдов
+\usepackage[nopar]{lipsum} %для генерации большого текста
+
+
+\newminted[pcode]{python}{baselinestretch=1, fontsize=\small}
+\newmintinline[pinline]{python3}{baselinestretch=1}
+
+
+\usepackage{tikz}
+\usetikzlibrary{arrows,positioning}
+\usepackage{listings}
+\lstset{language=Python}
+
+\newcommand{\real}{\mathbb{R}}
+\newcommand{\norm}{\mathop{\rm norm}\limits}
+\newcommand{\softmax}{\mathop{\rm softmax}\limits}
+
+\definecolor{beamer@blendedblue}{rgb}{0.037,0.366,0.75}
+
+\title[Введение в Python]{\bfseries Занятие 6: Обработка исключений. Менеджеры контекстов. Тестирование.}
+\author[Афанасьев~Г.\,И.]{Афанасьев Глеб Ильич}
+\subtitle{Практикум на ЭВМ 2021/2022}
+\institute[ВМК МГУ]{МГУ имени М. В. Ломоносова, факультет ВМК, кафедра ММП}
+\date{4 октября 2021 г.}
+
+\begin{document}
+
+\begin{frame}
+\maketitle
+\end{frame} 
+
+\begin{frame}[fragile]\frametitle{Введение}
+
+В больших проектах без тестирования жить сложно:
+
+\begin{itemize}
+
+\item[+] Дополнительные проверки корректности кода
+
+\item[+] Быстрая проверка корректности при изменениях в коде
+
+\item[$-$] Требуется время на написание
+
+\item[$-$] Код для тестов может быть длиннее кода программы
+\end{itemize}
+
+\end{frame} 
+
+
+\section{Обработка исключений}
+\subsection*{}
+
+\begin{frame}[fragile]\frametitle{Исключения}
+
+При написании программы часто возникают такие ситуации, когда успешное ее выполнение зависит от внешних условий, которые программист гаранитировать не может. Для обработки таких ситуаций был создан механизм исключений.
+\hfill
+
+Формальное определение:
+
+Исключения (exceptions) --- проблемы, возникающие в ходе выполнения программы, приводящие к невозможности дальнейшей отработки программой её базового алгоритма.
+
+\hfill
+
+Обработка исключений --- механизм, предназначенный для описания реакции программы на исключения
+
+\end{frame}
+\begin{frame}[fragile]\frametitle{Исключения}
+
+
+В Python исключения(как и все остальное) являются объектами. В С++ в качестве исключения мог выступать любой тип, в python - нет. Все исключения - объекты класса, отнаследованного от класса \pinline{Exception}.
+
+Через них можно получить информацию об ошибке:
+
+\begin{pcode}
+>>> 1 / 0
+ZeroDivisionError: division by zero
+>>> ZeroDivisionError.__doc__ # документация к исключению
+'Second argument to a division or modulo operation was zero.'
+>>> ZeroDivisionError.__mro__
+(ZeroDivisionError, ArithmeticError, Exception,
+BaseException, object)
+\end{pcode}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Примеры исключений}
+\begin{itemize}
+\item \pinline{BaseException} — базовый класс для встроенных
+исключений в Python (наследуются системные исключения и исключения, приводящие к
+завершению работы интерпретатора)
+
+\item \pinline{Exception} --- более общий класс, наследуются все остальные исключения
+
+\item \pinline{AssertionError} --- поднимается, если не выполнено условие оператора \pinline{assert}
+
+\begin{pcode}
+>>> assert 2 * 2 == 5, "Wrong equation"
+AssertionError: Wrong equation
+\end{pcode}
+
+\item \pinline{ImportError} --- поднимается, если оператор \pinline{import} не смог найти модуль с указанным именем
+\end{itemize}
+
+\footnotetext[1]{Список исключений: https://docs.python.org/3/library/exceptions.html}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Связка  \texttt{try ... except}}
+Связка \mintinline{python}{try ... except} позволяет перехватывать исключения, возбужденные интерпретатором или программным кодом, и выполнять восстановительные операции:
+\begin{pcode}
+>>> def one(x):
+...    try:
+...        print(x / x)
+...    except ZeroDivisionError: # перехватывается конкретное 
+...        print('We did it!')         # исключение
+...    except:                   # перехватываются все 
+...        print('Something is wrong') # исключения
+...    # остальная часть программы
+...
+>>> one(5) 
+1
+>>> one(0)
+'We did it!'
+>>> one('not a number')
+'Something is wrong'
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Связка  \texttt{try ... except}}
+\begin{pcode}
+>>> def one(x):
+...    try:
+...        print(x / x)
+...    except ZeroDivisionError:  
+...        print('We did it!')       
+...    except Exception as e: # e живёт только внутри блока           
+...        print('Something is wrong')
+...        return e
+...    # остальная часть программы
+...
+>>> my_exception = one('not a number')
+'Something is wrong'
+>>> my_exception.args
+("unsupported operand type(s) for /: 'str' and 'str'",)
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Связка  \texttt{try ... else}}
+С помощью ветки \pinline{else} можно выполнить какое-то
+действие в ситуации, когда внутри \pinline{try} блока не возникло
+исключения.
+
+\
+
+\begin{pcode}
+>>> import sys
+...
+>>> try:
+...     handle = open("example.txt", "r")
+>>> except IOError as e:
+...     print(e, file=sys.stderr)
+>>> else:
+...     print('File was opened')
+\end{pcode}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Ключевое слово \texttt{finally}}
+С помощью ветки \pinline{finally} можно выполнить какое-то действие вне
+зависимости от того, произошло исключение или нет.
+
+\
+
+\begin{pcode}
+>>> import sys
+...
+>>> try:
+...     handle = open("example.txt", "r")
+...     try:
+...         utils_with_file(hangle)
+...     finally:
+...         handle.close()
+>>> except IOError as e:
+...     print(e, file=sys.stderr)
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Ключевое слово \texttt{raise}}
+\mintinline{python}{raise} позволяет возбудить исключение программно:
+
+\begin{pcode}
+>>> def one(x):
+...    if type(x) != int:
+...        raise TypeError('My message') # любое сообщение
+...    return x / x
+...
+>>> one('string')
+TypeError: My message
+\end{pcode}
+
+\hfill
+
+Можно создавать пользовательские исключения:
+\begin{pcode}
+>>> class MyError(Exception):
+...    pass
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Еще про исключения}
+
+except ловит лишь исключения, поднятые в своем блоке или блоках, вложенных в него.
+
+\begin{pcode}
+>>> try:
+...     g = 4
+...     raise Exception("MyMessage1") #поднимаем исключение
+                                      #Exeption
+>>> except TypeError as e: #пытаемся поймать TypeError,
+                           #не ловим
+...     print("Something is wrong!1") 
+>>> finally:
+...     print("Finally1")
+
+>>> try:
+...     #код
+>>> except Exception as e:
+...     print("Something is wrong!2")
+>>> finally:
+...     print("Finally2")
+
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Еще про исключения}
+
+except ловит лишь исключения, поднятые в своем блоке или блоках, вложенных в него.
+
+\begin{pcode}
+
+Здесь исключение будет поймано.
+
+>>> try:
+...     #код
+...     try:
+...         g = 4
+...         raise Exception("MyMessage1") 
+...     except TypeError as e:
+...         print("Something is wrong!1") 
+...     finally:
+...         print("Finally1")
+>>> except Exception as e:
+...     print("Something is wrong!2")
+>>> finally:
+...     print("Finally2")
+
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Советы по использованию исключений}
+\begin{itemize}
+    \item В Python много встроенных типов исключений, которые
+    можно и нужно использовать при написании функций и
+    методов
+    
+    \item При объявлении нового типа исключения нужно наследоваться от базового класса Exception
+    
+    \item При создании большого количества пользовательских исключений, наследуйте их от одного базового пользовательского исключения
+\end{itemize}
+\end{frame}
+
+\section{Мененджеры контекста}
+\subsection*{}
+
+\begin{frame}[fragile]\frametitle{Что такое мененджер контекста?}
+Менеджеры контекста позволяют компактно выразит паттерн управления ресурсами:
+
+\begin{pcode}
+>>> r = get_resource()
+>>> try:
+...     do_something(r)
+>>> finally:
+...     free_resourse(r)
+\end{pcode}
+
+\
+
+С помощью менеджера контекста это можно записать так:
+\begin{pcode}
+>>> with get_resourse() as r:
+...     do_something(r)
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Протокол мененджеров контекста}
+Протокол менеджеров контекста состоит из двух методов:
+\begin{itemize}
+    \item метод \pinline{__enter__} 
+    
+    Иницилизация контекста, например, открытие файла. Результат записывается в переменную после \pinline{as}.
+    
+    \item метод \pinline{__exit__}
+    
+    Метод вызывается после выполнения тела оператора \pinline{with}. Имеет три аргмента:
+    \begin{itemize}
+        \item тип исключения
+        \item само исключение
+        \item объект типа \pinline{traceback}
+    \end{itemize}
+
+    Если в процессе исполнения тела оператора \pinline{with} было поднятно исключение, метод \pinline{__exit__} может подавить его, вернув \pinline{True}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Что происходит в операторе with?}
+\begin{pcode}
+>>> with get_resourse() as r:
+...     do_something(r)
+\end{pcode}
+\huge{$${\Leftrightarrow}$$}
+\begin{pcode}
+>>> manager = get_resource()
+>>> r = manager.__enter__()
+>>> try:
+...     do_something(r)
+... finally:
+...     exc_type, exc_value, tb = sys.exc_info()
+...     suppress = manager.__exit__(exc_type,
+...                                 exc_value, tb)
+...     if exc_value is not None and not suppress:
+...         raise exc_value
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Примеры менеджеров контекста: open}
+\begin{pcode}
+from functools import partial
+>>> class open:
+...     def __init__(self, path, *args, **kwargs):
+...         self.opener = partial(open, path,
+...                               *args, **kwargs)
+...
+...     def __enter__(self):
+...         self.handle = self.opener()
+...         return self.handle
+...
+...     def __exit__(self, *exc_info):
+...         self.handle.close()
+...         del self.handle
+...
+>>> with opened("./example.txt", mode="r") as handle:
+...     pass
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Примеры контекстных менеджеров: cd}
+\begin{pcode}
+>>> import os
+>>> class cd:
+...     def __init__(self, path):
+...         self.path = path
+...
+...     def __enter__(self):
+...         self.saved_cwd = os.getcwd()
+...         os.chdir(self.path)
+...
+...     def __exit__(self, *exc_info):
+...         os.chdir(self.saved_cwd)
+...
+>>> print(os.getcwd())
+./csc/python
+>>> with cd("/tmp"):
+...     print(os.getcwd())
+/tmp
+\end{pcode}
+\end{frame}
+
+\begin{frame}{Когда использовать мененджеры контекста?}
+Мененджеры контекста используются для следующих ситуаций:
+\begin{enumerate}
+    \item Открытие/закрытие 
+    \item Занятие/освобождение 
+    \item Изменение/откат изменений
+    \item Начало/конец
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Библиотека \pinline{contextlib}}
+\begin{itemize}
+    \item \pinline{closing} --- безопасное закрытие для любого класса с методом \pinline{close}
+    
+    \item \pinline{redirect_stdout} --- перехват \pinline{stdout} в переменную
+    
+    \item \pinline{suppress} --- подавление исключений указанного вида
+    
+    \item \pinline{ExitStack} --- открытие недетерминированного числа мененджеров контекста
+\end{itemize}
+
+\end{frame}
+
+\section{Юнит-тестирование}
+\subsection*{}
+
+\begin{frame}[fragile]\frametitle{Юнит-тестирование}
+
+Общие принципы:
+\begin{itemize}
+\item Код программы разбит на независимые части
+
+\item Каждая часть тестируется отдельно и независимо
+\end{itemize}
+
+\hfill
+
+Признаки хорошего теста:
+\begin{itemize}
+\item Корректность
+
+\item Понятность
+
+\item Конкретность (проверяет что-то одно)
+
+\item Полезность 
+
+\item Быстрота выполнения
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}[fragile]\frametitle{Функция для тестирования}
+Функция, которую мы будем тестировать:
+\begin{pcode}
+>>> def factorial(x):
+...    if x <= 0:
+...        return 0
+...    elif x == 1:
+...        return 1
+...    else:
+...        return x * factorial(x - 1)
+\end{pcode}
+
+\hfill
+
+Самый простой вариант тестирования:
+\begin{pcode}
+>>> print(factorial(3))
+6
+\end{pcode}
+
+
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Тестирование вручную}
+
+Оператор \mintinline{python}{assert} возбуждает исключение, при невыполнении
+определенного условия:
+\begin{pcode}
+>>> assert 1 == 2, 'Error' # второй аргумент - любое сообщение
+AssertionError: Error
+\end{pcode}
+
+\hfill
+
+Напишем несколько тестов:
+
+\begin{pcode}
+>>> def test_factorial(): # плохой
+...    assert factorial(5) == (lambda n: [1, 0][n > 1] or
+...                            (n - 1) * n)(5)
+\end{pcode}
+
+\begin{pcode}
+>>> def test_factorial(): # плохой
+...    assert factorial(4) == 24, 'Positive numbers'
+...    assert factorial(0) == 1, 'Zero'
+...    try:
+...        factorial(1000)
+...    except RecursionError:
+...        assert False, 'Recursion problem'
+\end{pcode}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Тестирование вручную}
+\begin{pcode}
+>>> def test_factorial(): # плохой
+...    assert factorial(5) != factorial(12)
+\end{pcode}
+
+\hfill
+
+\begin{pcode}
+>>> def test_factorial(): # плохой
+...    assert factorial('string') != factorial(12)
+\end{pcode}
+
+\hfill
+
+\begin{pcode}
+>>> def test_factorial(): # хороший
+...    assert factorial(0) == 1, 'Zero'
+\end{pcode}
+
+\hfill
+
+Тестирование вручную:
+\begin{itemize}
+\item[+] Быстро и легко писать
+\item[$-$] Надо запускать вручную
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Модуль unittest}
+\mintinline{python}{unittest} --- фреймворк для автоматизации тестов.
+
+Тест --- метод экземпляра наследника unittest.TestCase, начинающийся на test\_.
+\begin{pcode}
+>>> # модуль test_factorial.py
+>>> import unittest
+>>> from my_module import factorial
+...
+>>> class Test_factorial(unittest.TestCase):
+...    def test_factorial_positive(self):
+...        self.assertEqual(factorial(5), 120)
+...        
+...    def test_factorial_zero(self):
+...        self.assertEqual(factorial(0), 5) # специально!
+...
+>>> if __name__ == '__main__':
+...    unittest.main() # запускает все тесты модуля
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Результат работы unittest}
+
+\texttt{python -m unittest test\_factorial.py}
+
+\hfill
+
+\begin{pcode}
+.F
+======================================================================
+FAIL: test_factorial_zero (test_factorial.Test_factorial)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "test_factorial.py", line 10, in test_factorial_zero
+    self.assertEqual(factorial(0), 5)
+AssertionError: 1 != 5
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.000s
+
+FAILED (failures=1)
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Контекст тестов в unittest}
+В \mintinline{python}{unittest} можно запускать тесты с контекстом:
+
+\begin{pcode}
+>>> # модуль test_factorial.py
+>>> import unittest
+>>> from my_module import factorial
+...
+>>> class Test_factorial(unittest.TestCase):
+...    def setUp(self): # вызывается перед каждым тестом
+...        self.base = open('file_with_examples')
+...
+...    def test_factorial_positive(self):
+...        self.assertEqual(factorial(5), 120)
+...
+...    def tearDown(self): # вызывается после каждого теста
+...        self.base.close()      
+...
+>>> if __name__ == '__main__':
+...    unittest.main() 
+\end{pcode}
+\end{frame}
+
+
+\begin{frame}[fragile]\frametitle{Функции для проверки}
+Модуль unittest предоставляет множество функций для самых различных проверок, например:
+\begin{itemize}
+\item \mintinline{python}{assertIs(a, b)} --- \mintinline{python}{a is b}
+
+\item \mintinline{python}{assertRaises(exc, func, *args, **kwds)} --- \mintinline{python}{func(*args, **kwds)} порождает исключение exc
+
+\end{itemize}
+
+\hfill
+
+Дополнительные виды проверок можно получить из модуля \mintinline{python}{numpy.testing}:
+
+\begin{itemize}
+
+\item \mintinline{python}{assert_array_almost_equal(x, y, decimal)} --- \mintinline{python}{x} и \mintinline{python}{y} совпадают с некоторой точностью
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Кратко о \texttt{unittest}}
+\begin{itemize}
+\item[+] Автоматически запускает тесты
+
+\item[+] Генерирует хорошие сообщения об ошибках
+
+\item[+] Много возможностей (см. документацию)
+
+\item[+] Есть в стандартной библиотеке
+
+\item[$-$] Имеет нестандартный, непривычный интерфейс
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Модуль \texttt{py.test}}
+\texttt{py.test} --- альтернатива \texttt{unittest} для написания тестов.
+
+\hfill
+
+У \texttt{py.test} минимальные требования к интерфейсу, тест это:
+
+\begin{itemize}
+\item функция с именем, начинающимся с \texttt{test\_}
+\item то же, что и у \texttt{unittest}
+\end{itemize}
+
+\begin{pcode}
+>>> # модуль test_factorial.py
+>>> import py.test
+>>> from my_module import factorial
+...
+>>> def test_positive(): 
+...    assert factorial(4) == 24
+...
+>>> def test_zero():
+...    assert factorial(0) == 5 # специально!
+\end{pcode}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Результат работы \texttt{py.test}}
+
+\texttt{python3 -m pytest test\_factorial.py}
+
+\begin{pcode}
+============================= test session starts =============
+platform linux -- Python 3.5.2, pytest-3.2.1, py-1.4.34
+rootdir: /home/user/Programs, inifile:
+collected 2 items                                                               
+
+test_factorial.py .F
+
+=================================== FAILURES ==================
+__________________________________ test_zero __________________
+
+    def test_zero(): 
+>       assert factorial(0) == 5
+E       assert 1 == 5
+E        +  where 1 = factorial(0)
+
+test_factorial.py:19: AssertionError
+====================== 1 failed, 1 passed in 0.02 seconds =====
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Контекст тестов в \texttt{py.test}}
+Для задания контекста необходимо задать функции с специальными названиями \pinline{setup_} и \pinline{teardown_} (контекст может задаваться перед запуском модуля или функции):
+
+\
+
+\begin{pcode}
+def setup_module(module):
+    print ("module setup")
+
+def teardown_module(module):
+    print ("module teardown")
+
+def setup_function(function):
+    print ("function setup")
+
+def teardown_function(function):
+    print ("function teardown")
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Параметризация тестов в \texttt{py.test}}
+\textcolor{red}{ОСТОРОЖНО: декоратор!}
+
+\begin{pcode}
+>>> @pytest.mark.parametrize("i, right_answer", [
+...     (1, 1),
+...     (2, 2),
+...     (3, 6)
+... ])
+>>> def test_factorial(i, right_answer):
+...     assert factorial(i) == right_answer
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Кратко о \texttt{py.test}}
+\begin{itemize}
+\item[+] Автоматически запускает тесты
+
+\item[+] Генерирует хорошие сообщения об ошибках
+
+\item[+] Много возможностей (см. документацию)
+
+\item[$+$] Простой интерфейс
+
+\item[$-$] Более магический чем \texttt{unittest} (но не в наших примерах)
+\end{itemize}
+\end{frame}
+
+
+
+
+
+
+\begin{frame}[fragile]\frametitle{\texttt{doc.test}}
+\mintinline{python}{doctest} позволяет писать тесты внутри документации.
+
+\mintinline{python}{doctest} проводит сравнение (как строк!) записанного ответа и вывода интерпретатора на инструкцию:
+\begin{pcode}
+import doctest
+def factorial(x):
+    """
+    Documentation
+    
+    >>> factorial(5)
+    120
+    
+    >>> factorial(0) # специально
+    5 
+    """
+    # код функции
+    
+doctest.testmod()
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Результат работы \texttt{doc.test}}
+\begin{pcode}
+***********************************************************
+File "__main__", line 8, in __main__.factorial
+Failed example:
+    factorial(0) # специально
+Expected:
+    5 
+Got:
+    1
+***********************************************************
+1 items had failures:
+   1 of   2 in __main__.factorial
+***Test Failed*** 1 failures.
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Кратко о \texttt{doc.test}}
+
+\begin{itemize}
+\item[+] Автоматически запускает тесты
+
+\item[+] Генерирует хорошие сообщения об ошибках
+
+\item[+] В документации всегда актуальные примеры кода
+
+\item[-] Результаты сравниваются только как строки
+
+\item[-] Если в середине теста произошла ошибка, оставшиеся тесты не выполнятся
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}[fragile]\frametitle{Заключение}
+
+В Python большое количество способов тестировать свой код:  
+\begin{itemize}
+\item Ручное тестирование с помощью \mintinline{python}{assert}
+
+\item Прописывание простых тестов внутри документации с помощью \mintinline{python}{doc.test}
+
+\item Продвинутые библиотеки \mintinline{python}{unittest} и \mintinline{python}{py.test}
+
+\end{itemize}
+
+\hfill
+
+Писать тесты к своему коду полезно! 
+
+\hfill
+
+
+\end{frame}
+
+
+\end{document}
