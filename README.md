@@ -43,7 +43,6 @@
 | 4 октября | 6  | <ul><li>Исключения. Менеджеры контекста. Юнит-тестирование.| [Презентация](Seminars/Seminar%2005.2.%20TeX:%20Details/main.pdf) ([tex](Seminars/Seminar%2005.2.%20TeX:%20Details/main.tex)), [biblatex + ГОСТ](Seminars/Seminar%2006.%20Excptions.%20Context%20managers.%20Unit-tests./Presentations.pdf)  | ⊙_ರೃ |
 | 11 октября |  7   | <ul><li>Итераторы</li><li>Генераторы</li></ul> | [Ноутбук](https://github.com/mmp-practicum-team/mmp_practicum_fall_2021/blob/main/Seminars/Seminar%2007.%20Iterators%20and%20generators/iterators-generators.ipynb)<br />[Презентация](https://github.com/mmp-practicum-team/mmp_practicum_fall_2021/blob/main/Seminars/Seminar%2007.%20Iterators%20and%20generators/Итераторы%20и%20генераторы.pdf) | Контест 4: [Итераторы и генераторы](https://contest.yandex.ru/contest/30080/enter/) |
 
-## 
 
 ## Формат сдачи курса
 
