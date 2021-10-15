@@ -1,6 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{my\PYGZus{}list} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{]}
-\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{c+c1}{\PYGZsh{} две эквивалентные записи}
-\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{f}\PYG{p}{(}\PYG{n}{my\PYGZus{}list}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{my\PYGZus{}list}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{my\PYGZus{}list}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{])}
-\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{f}\PYG{p}{(}\PYG{o}{*}\PYG{n}{my\PYGZus{}list}\PYG{p}{)}
-\end{Verbatim}

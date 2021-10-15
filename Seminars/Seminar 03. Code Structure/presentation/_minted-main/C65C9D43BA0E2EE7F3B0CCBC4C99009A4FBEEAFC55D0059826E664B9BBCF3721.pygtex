@@ -1,9 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{k}{def} \PYG{n+nf}{f}\PYG{p}{(}\PYG{n}{x}\PYG{p}{):}
-\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}}    \PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}\PYGZdq{}This function does nothing\PYGZdq{}\PYGZdq{}\PYGZdq{}}
-\PYG{o}{...}    \PYG{k}{if} \PYG{l+s+s1}{\PYGZsq{}f\PYGZus{}count\PYGZsq{}} \PYG{o+ow}{in} \PYG{n}{f}\PYG{o}{.}\PYG{n+nv+vm}{\PYGZus{}\PYGZus{}dict\PYGZus{}\PYGZus{}}\PYG{p}{:}
-\PYG{o}{...}        \PYG{n}{f}\PYG{o}{.}\PYG{n}{f\PYGZus{}count} \PYG{o}{+=} \PYG{l+m+mi}{1}
-\PYG{o}{...}    \PYG{k}{else}\PYG{p}{:}
-\PYG{o}{...}        \PYG{n}{f}\PYG{o}{.}\PYG{n}{f\PYGZus{}count} \PYG{o}{=} \PYG{l+m+mi}{1}
-\PYG{o}{...}    \PYG{k}{return} \PYG{n}{x}
-\end{Verbatim}

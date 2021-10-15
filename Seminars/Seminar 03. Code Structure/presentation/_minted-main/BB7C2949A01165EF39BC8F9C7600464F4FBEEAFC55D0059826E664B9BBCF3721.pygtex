@@ -1,3 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{k+kn}{from} \PYG{n+nn}{my\PYGZus{}module} \PYG{k+kn}{import} \PYG{n}{function\PYGZus{}in\PYGZus{}module}
-\end{Verbatim}

@@ -1,3 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{n}{attribute} \PYG{o}{=} \PYG{n+nb}{property}\PYG{p}{(}\PYG{n}{fget}\PYG{p}{,} \PYG{n}{fset}\PYG{p}{,} \PYG{n}{fdel}\PYG{p}{,} \PYG{n}{doc}\PYG{p}{)}
-\end{Verbatim}

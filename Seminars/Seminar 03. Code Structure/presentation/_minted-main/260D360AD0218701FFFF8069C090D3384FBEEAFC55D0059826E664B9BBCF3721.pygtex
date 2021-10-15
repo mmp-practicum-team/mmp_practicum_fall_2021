@@ -1,8 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{k}{def} \PYG{n+nf}{min}\PYG{p}{(}\PYG{n}{first}\PYG{p}{,} \PYG{o}{*}\PYG{n}{args}\PYG{p}{):}
-\PYG{o}{...}     \PYG{n}{res} \PYG{o}{=} \PYG{n}{first}
-\PYG{o}{...}     \PYG{k}{for} \PYG{n}{arg} \PYG{o+ow}{in} \PYG{n}{args}\PYG{p}{:}
-\PYG{o}{...}         \PYG{k}{if} \PYG{n}{arg} \PYG{o}{\PYGZlt{}} \PYG{n}{res}\PYG{p}{:}
-\PYG{o}{...}             \PYG{n}{res} \PYG{o}{=} \PYG{n}{arg}
-\PYG{o}{...}     \PYG{k}{return} \PYG{n}{res}
-\end{Verbatim}

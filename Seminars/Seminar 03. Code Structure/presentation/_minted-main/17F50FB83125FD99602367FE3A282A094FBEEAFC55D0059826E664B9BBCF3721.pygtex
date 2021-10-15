@@ -1,9 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{k}{class} \PYG{n+nc}{MyClass}\PYG{p}{:}
-\PYG{o}{...}    \PYG{k}{def} \PYG{n+nf}{my\PYGZus{}method}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
-\PYG{o}{...}        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Do nothing\PYGZsq{}}\PYG{p}{)}
-\PYG{o}{...}
-\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{new\PYGZus{}obj} \PYG{o}{=} \PYG{n}{MyClass}\PYG{p}{()}
-\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{new\PYGZus{}obj}\PYG{o}{.}\PYG{n}{my\PYGZus{}mehtod}\PYG{p}{()} \PYG{c+c1}{\PYGZsh{} связанный метод}
-\PYG{l+s+s1}{\PYGZsq{}Do nothing\PYGZsq{}}
-\end{Verbatim}

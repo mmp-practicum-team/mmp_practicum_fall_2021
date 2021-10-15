@@ -1,8 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{the\PYGZus{}same\PYGZus{}method} \PYG{o}{=} \PYG{n}{MyClass}\PYG{o}{.}\PYG{n}{my\PYGZus{}method} \PYG{c+c1}{\PYGZsh{} несвязанный метод}
-\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{the\PYGZus{}same\PYGZus{}method}\PYG{p}{()}
-\PYG{n+ne}{TypeError}\PYG{p}{:} \PYG{n}{my\PYGZus{}method}\PYG{p}{()} \PYG{n}{missing} \PYG{l+m+mi}{1} \PYG{n}{required} \PYG{n}{positional}
-\PYG{n}{argument}\PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}self\PYGZsq{}}
-\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{the\PYGZus{}same\PYGZus{}method}\PYG{p}{(}\PYG{n}{new\PYGZus{}obj}\PYG{p}{)}
-\PYG{l+s+s1}{\PYGZsq{}Do nothing\PYGZsq{}}
-\end{Verbatim}

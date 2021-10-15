@@ -1,4 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{o}{\PYGZgt{}\PYGZgt{}\PYGZgt{}} \PYG{n}{C}\PYG{o}{.}\PYG{n+nv+vm}{\PYGZus{}\PYGZus{}mro\PYGZus{}\PYGZus{}}
-\PYG{n}{\PYGZus{}\PYGZus{}main\PYGZus{}\PYGZus{}}\PYG{o}{.}\PYG{n}{C}\PYG{p}{,} \PYG{n}{\PYGZus{}\PYGZus{}main\PYGZus{}\PYGZus{}}\PYG{o}{.}\PYG{n}{A}\PYG{p}{,} \PYG{n}{\PYGZus{}\PYGZus{}main\PYGZus{}\PYGZus{}}\PYG{o}{.}\PYG{n}{B}\PYG{p}{,} \PYG{n+nb}{object}
-\end{Verbatim}
