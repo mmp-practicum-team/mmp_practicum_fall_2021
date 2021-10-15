@@ -1,0 +1,741 @@
+\documentclass[fleqn, xcolor=x11names]{beamer}
+\usepackage[utf8]{inputenc}
+\usetheme{MyAmsterdam} %тема\
+\usecolortheme{default}
+\usepackage[russian]{babel}
+\usepackage[OT1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+%\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{graphics, graphicx}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{enumerate}
+\usepackage{minted}
+\usemintedstyle{default}
+
+\setbeamertemplate{navigation symbols}{} % отключить навигационные значки
+\setbeamertemplate{footline}{%
+    \hspace{0.94\paperwidth}%
+    \usebeamerfont{title in head/foot}%
+    \insertframenumber\,/\,\inserttotalframenumber%
+} % переопределить нижнуюю панель, убрать всё кроме номера слайда
+
+
+%\usefonttheme[onlylarge]{structurebold} % названия и текст в колонтитулах выводится полужирным шрифтом.
+\usefonttheme[onlymath]{serif}  % привычный шрифт для математических формул
+%\setbeamerfont*{frametitle}{size=\normalsize,series=\bfseries} % шрифт заголовков слайдов
+\usepackage[nopar]{lipsum} %для генерации большого текста
+
+
+\newminted[pcode]{python3}{baselinestretch=1, fontsize=\small}
+\newmintinline[pinline]{python3}{baselinestretch=1}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows,positioning}
+\usepackage{listings}
+\lstset{language=Python}
+
+\newcommand{\real}{\mathbb{R}}
+\newcommand{\norm}{\mathop{\rm norm}\limits}
+\newcommand{\softmax}{\mathop{\rm softmax}\limits}
+
+\definecolor{beamer@blendedblue}{rgb}{0.037,0.366,0.75}
+
+\title[Введение в Python]{\bfseries Занятие 7: Итераторы и генераторы}
+\author[Чернышёв~А.\,В.]{Александр Чернышёв}
+\subtitle{Практикум на ЭВМ 2020/2021}
+\institute[ВМК МГУ]{МГУ имени М. В. Ломоносова, факультет ВМК, кафедра ММП}
+\date{11 октября 2021 г.}
+
+\begin{document}
+
+\begin{frame}
+\maketitle
+\end{frame} 
+
+\begin{frame}[fragile]\frametitle{Введение}
+
+Сколько памяти расходуется при выполнении?
+
+\begin{pcode}
+>>> import numpy as np
+>>> list_of_numbers = np.arange(0, 10 ** 8)
+>>> sum = 0
+>>> for item in list_of_numbers: 
+...     sum += item
+\end{pcode}
+
+\end{frame} 
+
+\begin{frame}[fragile]\frametitle{Введение}
+
+Сколько памяти расходуется при выполнении? ($O(n)$)
+
+\begin{pcode}
+>>> n = 10 ** 8
+>>> list_of_numbers = np.arange(0, n)
+>>> sum_numbers = 0
+>>> for item in list_of_numbers: 
+...     sum_numbers += item
+\end{pcode}
+
+
+Существует реализация с памятью $O(1)$:
+
+\begin{pcode}
+>>> item, sum_numbers = 0, 0
+>>> while item < n:
+...     sum_numbers += item
+...     item += 1
+\end{pcode}
+
+Ещё одна реализация с памятью $O(1)$:
+\begin{pcode}
+>>> sum_numbers = 0
+>>> for item in range(0, n): 
+...     sum_numbers += item
+\end{pcode}
+
+
+\end{frame} 
+
+
+\section{Итераторы}
+\subsection*{}
+
+\begin{frame}[fragile]\frametitle{Семантика оператора \texttt{for}}
+\begin{pcode}
+>>> for elem in elem_collection:
+...     do_something(elem)
+\end{pcode}
+
+\hfill
+
+Концептуально такой цикл \pinline{for} делает следующее:
+\begin{pcode}
+>>> it = iter(elem_collection) # инициализация  
+>>> while True:
+...     try:
+...         elem = next(it) # получить следующий элемент
+...     except StopIteration: # если элементов больше нет
+...         break
+...     do_something(elem)
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Метод \texttt{\_\_iter\_\_}}
+Метод \pinline{__iter__} должен вернуть экземпляр класса, который будет реализовывать протокол итераций, например \pinline{self}.
+
+\hfill
+
+По сути, это перегрузка встроенной обобщённой функции \pinline{iter}.
+
+\hfill
+
+Примеры использования функции \pinline{iter}:
+\begin{pcode}
+>>> my_list = [0, 1, 2]
+>>> iter(my_list)
+<list_iterator at 0x7f866bacdf28>
+>>> my_list.__iter__()
+<list_iterator at 0x7f8763166710>
+>>> x = 1
+>>> iter(x)
+TypeError: 'int' object is not iterable
+\end{pcode}
+\end{frame}
+
+
+
+\begin{frame}[fragile]\frametitle{Метод \texttt{\_\_next\_\_}}
+Метод \pinline{__next__} возвращает следующий по порядку
+элемент итератора. Если такого элемента нет, то метод
+должен поднять исключение \pinline{StopIteration}.
+
+Считается, что если элемент поднял \pinline{StopIteration}, то все следующие тоже поднимут это исключение!
+
+
+\hfill
+
+
+По сути, это перегрузка встроенной обобщённой функции \pinline{next}.
+  
+\hfill
+
+Примеры использования функции \pinline{next}:
+\begin{pcode}
+>>> my_list = [0, 1, 2]
+>>> it = iter(my_list)
+>>> next(it)
+0
+>>> it.__next__() # то же самое, что next(it)
+1
+>>> next(my_list)
+TypeError: 'list' object is not an iterator
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Протокол итераций и итератор}
+Протокол итераций (протокол итераторов, iterator protocol) заключается в концепции итерирования по контейнерам с помощью методов \pinline{__iter__} и \pinline{__next__}
+
+\hfill
+
+Итерируемое (iterable) --- то, что имеет метод \pinline{__iter__}
+
+\hfill
+
+Итератор (iterator) --- то, что имеет методы \pinline{__iter__} и \pinline{__next__}, т.е. поддреживает протокол итераций
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Пример написания своего итератора}
+\begin{pcode}
+>>> class MyFile:
+...    def __init__(self, file_name):
+...         self.file_name = file_name
+...        
+...     def __iter__(self):
+...         self.file = open(self.file_name, 'r')
+...         return self
+...     
+...     def __next__(self):
+...         new_line = self.file.readline()
+...         new_line = new_line.lower()
+...         if new_line == '':
+...             self.file.close()
+...             raise StopIteration
+...         return new_line
+\end{pcode}
+
+Зачем это может быть нужно?
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Особенности \texttt{iter} и \texttt{next}}
+Другая форма вызова \pinline{iter}: принимает функцию и значение, вызывает функцию, пока она не вернёт это значение
+\begin{pcode}
+>>> with open('my_file.txt', 'r') as input:
+...     for line in iter(input.readline, ""):
+...         print(line)
+\end{pcode}
+
+\hfill
+
+Для функции \pinline{next} можно вторым аргументом указать значение, которое необходимо вернуть в случае исключения:
+\begin{pcode}
+>>> next(iter([]), 153)
+153
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Протокол итераций и \texttt{\_\_getitem\_\_}}
+Напоминание: \pinline{__getitem__} возвращает элемент по индексу либо поднимает \pinline{IndexError}, если элемента нет
+
+\hfill
+
+Если реализован метод \pinline{__getitem__}, протокол итераций будет реализован автоматически
+
+\begin{pcode}
+>>> class MyList:
+...    def __init__(self, *args):
+...        self.list = list(args)
+...        
+...    def __getitem__(self, i): 
+...        return self.list[i] 
+...
+>>> for elem in MyList(1, 2):
+...     print(elem)
+1
+2
+\end{pcode}
+
+Как реализован протокол итераций исходя из примера? 
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Протокол итераций и \texttt{\_\_getitem\_\_}}
+Пример, когда итератор будет работать некорректно:
+\begin{pcode}
+>>> class MyDict:
+...     def __init__(self, **kwargs):
+...         self.dict = dict(kwargs)
+...         
+...     def __getitem__(self, i):
+...         return self.dict[i]
+...
+>>> for elem in MyDict(a=1, b=2):
+...    print(elem)
+KeyError: 0
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Протокол итераций и \texttt{\_\_contains\_\_}}
+Напоминание: \pinline{__contains__} возвращает \pinline{True} если переданный элемент содержится в экземпляре (перегрузка \pinline{in} и \pinline{not in})
+
+\hfill
+
+Если класс реализует протокол итераций, метод \pinline{__contains__} реализуется автоматически <<следующим образом>>:
+
+\begin{pcode}
+>>> class SomeClass:
+...     # это реализуется автоматически
+...     def __contains__(self, target_elem):
+...         for elem in iter(self):
+...             if target_elem == elem:
+...                 return True
+\end{pcode}
+
+\hfill
+
+Пример для \pinline{MyList}:
+\begin{pcode}
+>>> 2 in MyList(1, 2, 3, 4)
+True
+\end{pcode}
+
+\end{frame}
+
+\section{Генераторы}
+\subsection*{}
+\begin{frame}[fragile]\frametitle{Генераторы}
+Генератор --- это функция, которая использует не только оператор \pinline{return}, но и оператор \pinline{yield}
+
+\hfill
+
+В результате выполнения оператора \pinline{yield} работа функции приостанавливается, а не прерывается, как при использовании оператора \pinline{return}
+
+\hfill
+
+Любой генератор --- итератор, обратное неверно
+
+
+\begin{pcode}
+>>> def f():
+...     print("Start")
+...     x = 17
+...     yield x
+...     yield x + 1
+...     print("Done")
+\end{pcode}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Пример работы генератора}
+\begin{pcode}
+>>> def f():
+...     print("Start")
+...     x = 17
+...     yield x
+...     yield x + 1
+...     print("Done")
+\end{pcode}
+
+\hfill
+
+\begin{pcode}
+>>> type(f)              >>> next(gen)
+<class function>         18
+>>> gen = f()            >>> next(gen)
+>>> type(gen)            Done
+<class generator>        StopIteration:
+>>> next(gen)            
+Start                    
+17                       
+\end{pcode}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Пример генератора: unique}
+\begin{pcode}
+>>> def unique(iterable, seen=None):
+...     seen = set(seen or [])
+...     for item in iterable:
+...         if item not in seen:
+...             seen.add(item)
+...             yield item
+...
+>>> sequence = [1, 1, 2, 3]
+>>> unique(xs)
+<generator object unique at 0x7f87609ccc50>
+>>> for elem in unique(xs):
+...     print(l)
+1
+2
+3
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Пример генератора: chain}
+\begin{pcode}
+>>> def chain(*iterables):
+...     for iterable in iterables:
+...         for item in iterable:
+...             yield item
+\end{pcode}
+
+\begin{pcode}
+>>> xs = range(3)
+>>> ys = [42]
+>>> chain(xs, ys)
+<generator object chain at 0x10311d708>
+>>> list(chain(xs, ys))
+[0, 1, 2, 42]
+>>> 42 in chain(xs, ys)
+True
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Переиспользование генератора}
+Генераторы, как и любые итераторы, истощаются:
+\begin{pcode}
+>>> def f():
+...     yield 42
+...
+>>> gen = f()
+>>> list(gen)
+[42]
+>>> list(gen) 
+[]
+\end{pcode}
+
+\hfill
+
+Не надо переиспользовать генераторы!
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Генератор --- способ задания итератора}
+\begin{pcode}
+>>> def my_file(file_name):
+...     file_obj = open(file_name, 'r')
+...     for new_line in file_obj:
+...         new_line = new_line.lower()
+...         if new_line != '':
+...             yield new_line
+...         else:         
+...             file_obj.close()
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Генераторные выражения}
+%Но есть похожая конструкция
+Генераторное-выражение:
+
+\begin{pcode}
+>>> gen = (x ** 2 for x in range(0, 5))
+>>> gen
+<generator object <genexpr> at 0x7f87609d7308>
+>>> list(gen)
+[0, 1, 4, 9, 16]
+\end{pcode}
+
+\hfill
+
+%Важно: г
+Генераторы списков, словарей множеств не являются генераторами!
+\end{frame}
+
+
+\begin{frame}[fragile]\frametitle{Оператор \pinline{yield from}}
+
+Оператор \pinline{yield from} позволяет делегировать выполнение
+другому генератору: 
+\begin{pcode}
+>>> def f():
+...     yield 1
+...     yield 2
+...    
+>>> def g():
+...     s = f()
+...     yield from s
+...
+>>> list(g())
+[1, 2]
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Продвинутое использование генераторов}
+Генераторы не так просты как кажутся
+
+\hfill
+
+Продвинутые методы работы с генераторами:
+\begin{itemize}
+\item Можно передать в генератор исключение и поднять его в месте, где генератор приостановил исполнение (\pinline{.throw})
+
+\item Можно передавать в генератор свои значения (\pinline{.send})
+
+\item Можно <<закрыть>> генератор, передав ему специальное исключение (\pinline{.close})
+\end{itemize}
+
+\hfill
+
+Подробности можно узнать здесь:
+
+\href{https://compscicenter.ru/courses/python/2015-autumn/classes/1542/}{https://compscicenter.ru/courses/python/2015-autumn/classes/1542/}
+
+\href{http://dabeaz.com/coroutines/Coroutines.pdf}{http://dabeaz.com/coroutines/Coroutines.pdf}
+\end{frame}
+
+
+\section{Стандартные итераторы}
+\subsection*{}
+\begin{frame}[fragile]\frametitle{\texttt{range}}
+
+\pinline{range} возвращает итерируемый объект \texttt{range object} (не~итератор!)
+
+\begin{pcode}
+>>> my_range = range(0, 5)
+>>> my_range
+range(0, 5)
+>>> next(my_range)
+TypeError: 'range' object is not an iterator
+>>> iter(my_range)
+<range_iterator at 0x7f8780179240>
+>>> next(iter(my_range))
+0
+\end{pcode}
+
+\pinline{range} при любых аргументах требует константный объём памяти
+
+\hfill
+
+В Python2 аналог \pinline{range} --- \pinline{xrange}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{\texttt{zip}}
+
+\pinline{zip} возвращает итератор
+
+\begin{pcode}
+>>> my_list_1 = [1, 2]
+>>> my_list_2 = ['a', 'b']
+>>> my_tuples = zip(my_list_1, my_list_2)
+>>> my_tuples
+<zip at 0x7f8769928e08>
+>>> iter(my_tuples)
+<zip at 0x7f8769928e08>
+>>> next(my_tuples)
+(1, 'a')
+>>> next(my_tuples)
+(2, 'b')
+>>> next(my_tuples)
+StopIteration: 
+\end{pcode}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{\texttt{enumerate}}
+\pinline{enumerate} возвращает итератор
+
+\hfill
+\begin{pcode}
+>>> my_list = ['a', 'b', 'c']
+>>> it = enumerate(my_list)
+>>> it
+<enumerate at 0x7f87609c6360>
+>>> next(it)
+(0, 'a')
+\end{pcode}
+%\hfill
+
+%Как выглядел бы enumerate, если бы мы его писали сами?
+\end{frame}
+
+
+\begin{frame}[fragile]\frametitle{\texttt{map}}
+\pinline{map(func, sequence1, sequence2 ... )} возвращает итератор, состоящий из результатов применений функции \pinline{func} к элементам \pinline{sequence1}, \pinline{sequence2} 
+
+\begin{itemize}
+\item \pinline{func} --- функция, которая применяется к каждому элементу \pinline{sequence}
+\item \pinline{sequence1}, \pinline{sequence2} \ldots  --- итераторы
+\end{itemize}
+
+\begin{pcode}
+>>> it = map(lambda x: x * 2, [0, 1, 2, 3])
+>>> list(it)
+[0, 1, 4, 9]
+\end{pcode}
+
+\begin{pcode}
+>>> it = map(lambda x, y: x + y, [0, 1, 2, 3], [10, 100, 500])
+>>> list(it)
+[10, 101, 502]
+\end{pcode}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{\texttt{filter}}
+\pinline{filter(func, sequence)} возвращает итератор, состоящий из элементов \pinline{sequence}, для которых \pinline{func} вернула \pinline{True}
+
+\begin{pcode}
+>>> it = filter(lambda x: x > 0, [0, -1, 2, -3, 5])
+>>> list(it)
+[2, 5]
+\end{pcode}
+
+\hfill
+
+И \pinline{filter}, и \pinline{map} можно проще записать через генераторы списков!
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{\texttt{reduce}}
+
+\pinline{reduce(func, sequence)} --- кумулятивное применение функции \pinline{func} к элементам последовательности \pinline{sequence}
+
+\begin{pcode}
+>>> from functools import reduce
+...
+>>> # ((1*2)*3)*4
+>>> it = reduce(lambda x, y: x * y, [1, 2, 3, 4]) 
+>>> it
+24 
+>>> it = reduce(lambda x, y: '({}*{})'.format(str(x), str(y)),
+                [1, 2, 3, 4])
+(((1*2)*3)*4)
+\end{pcode}
+\end{frame}
+
+
+\section{Модуль itertools}
+\subsection*{}
+
+\begin{frame}[fragile]\frametitle{Соединение и повторение итераторов}
+Написанная нами \pinline{chain} есть в \pinline{itertools}:
+\begin{pcode}
+>>> from itertools import chain
+>>> it1 = iter([1,2,3])
+>>> it2 = iter([4,5])
+>>> list(chain(it1, it2))
+[1, 2, 3, 4, 5]
+\end{pcode}
+
+\pinline{repeat} для создания итератора повторяющейся последовательности:
+\begin{pcode}
+>>> from itertools import repeat
+>>> b = []
+>>> for i in repeat([1, 2], 4):
+...     b.append(i)
+>>> print (b)
+[1, 2, 1, 2, 1, 2, 1, 2]
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Бесконечные итераторы}
+
+\begin{pcode}
+from itertools import count # бесконечный range
+c = []
+for i in count(0, 5):
+    c.append(i)
+    if i > 20:
+        break
+print(c)
+[0, 5, 10, 15, 20, 25]
+\end{pcode}
+
+\begin{pcode}
+>>> from itertools import cycle # бесконечный повтор 
+>>> d = []                      # последовательности
+>>> it = cycle([1,2,3])
+>>> for i, j in enumerate(it):
+...     if i > 6:
+...         break
+...     d.append(j)
+>>> print(d
+[1, 2, 3, 1, 2, 3, 1]
+\end{pcode}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Срезы и взятие частей}
+Срез для произвольного итератора:
+\begin{pcode}
+>>> from itertools import islice  
+>>> e = islice(range(10), 0, 8, 2) 
+>>> list(e)
+[0, 2, 4, 6]
+\end{pcode}
+
+\hfill
+
+Выбрасывать из итератора элементы, пока не найдётся элемент, удовлетворяющий условию:
+\begin{pcode}
+>>> from itertools import dropwhile
+>>> f = dropwhile(lambda x: x < 5, range(10))
+>>> print (list(f))
+[5, 6, 7, 8, 9]
+\end{pcode}
+
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Комбинаторные итераторы}
+\begin{pcode}
+>>> from itertools import permutations
+>>> it = permutations("YN")
+>>> print (list(it))
+[('Y', 'N'), ('N', 'Y')]
+\end{pcode}
+
+\hfill
+
+\begin{pcode}
+>>> from itertools import combinations
+>>> it = combinations("ABC", 2)
+>>> print (list(it))
+[('A', 'B'), ('A', 'C'), ('B', 'C')]
+\end{pcode}
+
+\hfill
+
+\begin{pcode}
+>>> from itertools import product
+>>> it = product("AB", repeat=2)
+>>> print (list(it))
+[('A', 'A'), ('A', 'B'), ('B', 'A'), ('B', 'B')]
+\end{pcode}
+\end{frame}
+
+\section*{}
+
+\begin{frame}[fragile]\frametitle{Итераторы в задачах с данными большого объёма}
+Итераторы могут быть полезны в ситуациях, когда хранить всю выборку в памяти невозможно
+
+\hfill
+
+Алгоритм работы:
+\begin{enumerate}
+\item Сохранить данные на жёстком диске в хорошем формате
+\item Написать итератор, считывающий данные неполностью и преобразующий их в вектора
+\item Обучать алгоритм по батчам данных
+\end{enumerate}
+
+%\hfill
+%
+%Некоторые библиотеки поддерживают работу с итераторами из коробки (например, Gensim).
+\end{frame}
+
+\begin{frame}{Варианты применения итераторов в data science}
+\begin{itemize}
+    \item Работа с огромной текстовой коллекцией (коллекцией изображений, и т.д.)
+    
+    \item Изменение порядка подачи объектов на обучение
+    
+    \item Быстрая генерация из сложных объектов более простых (например, по тексту генерируем пары предложений)
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Заключение}
+\begin{itemize}
+\item Итераторы позволяют не хранить одновременно в памяти все значения последовательности
+
+\item Итераторы можно задавать с помощью описания специальных методов \pinline{__iter__} и \pinline{__next__} или декларативно с помощью генераторов
+
+\item Многие операции с операторами уже реализованы в библиотеке \pinline{itertools} либо средствами \pinline{itertools} их можно реализовать проще
+
+\item Итераторы необходимо применять тогда, когда невозможно хранить весь объём данных в памяти
+\end{itemize}
+\end{frame}
+
+
+
+
+\end{document}
