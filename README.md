@@ -42,6 +42,7 @@
 | 4 октября | 5.2 (доп) | <ul><li>Детали TeX</li><li>Презентации</ul></li> | [Презентация](Seminars/Seminar%2005.2.%20TeX%20Details/main.pdf) ([tex](Seminars/Seminar%2005.2.%20TeX%20Details/main.tex)), [biblatex + ГОСТ](Seminars/Seminar%2005.2.%20TeX%20Details/gost_example.pdf) ([tex](Seminars/Seminar%2005.2.%20TeX%20Details/gost_example.tex)) | 👀 👀 👀 |
 | 4 октября | 6 | <ul><li>Исключения. Менеджеры контекста. Юнит-тестирование.</ul></li> | [Презентация](Seminars/Seminar%2006.%20Exceptions.%20Context%20managers.%20Unit-tests/Presentations.pdf) | ```⊙_ರೃ``` |
 | 11 октября | 7 | <ul><li>Итераторы</li><li>Генераторы</li></ul> | [Ноутбук](Seminars/Seminar%2007.%20Iterators%20and%20generators/iterators-generators.ipynb) [Презентация](Seminars/Seminar%2007.%20Iterators%20and%20generators/Итераторы%20и%20генераторы.pdf) ([tex](Seminars/Seminar%2007.%20Iterators%20and%20generators/Итераторы%20и%20генераторы%20%5Bисходники%5D)) | Контест 4: [Итераторы и генераторы](https://contest.yandex.ru/contest/30080/enter/) |
+| 18 октября | 8 | <ul><li>Введение в обработку текстов</li></ul> | [Презентация](Seminars/Seminar%2008.%20Text%20processing/Обработка%20текстов%20в%20Python.pdf) | ... |
 
 
 ## Формат сдачи курса
