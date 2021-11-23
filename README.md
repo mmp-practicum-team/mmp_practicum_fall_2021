@@ -46,6 +46,7 @@
 | 25 октября | 9 | <ul><li>Декораторы</li></ul> | [Ноутбук](Seminars/Seminar%2009.%20Decorators/decorators_prac_2021_fall.ipynb) | Контест 5: [Декораторы](https://contest.yandex.ru/contest/30968/enter/) |
 | 1 ноября | 10 | <ul><li>Окружение разработчика</li></ul> | [Ноутбук](Seminars/Seminar%2010.%20ML-Infrastructure.%20Cloud,%20git,%20collab/SecretCommands.ipynb) | ＼(٥⁀▽⁀ )／ |
 | 15 ноября | 11 | <ul><li>Docker</li></ul> | [Полезные команды](Seminars/Seminar%2011.%20Docker/Commands.ipynb) | ＼(٥⁀▽⁀ )／ |
+| 22 ноября | 12 | <ul><li>Flask</li></ul> | [Простейшее Flask приложение](Seminars/Seminar%2012.%20Flask) | ＼(٥⁀▽⁀ )／ |
 
 
 ## Формат сдачи курса
