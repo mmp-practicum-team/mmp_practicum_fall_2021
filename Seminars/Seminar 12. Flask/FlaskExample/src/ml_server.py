@@ -26,7 +26,7 @@ from utils import polygon_random_point
 app = Flask(__name__, template_folder='html')
 app.config['BOOTSTRAP_SERVE_LOCAL'] = True
 app.config['SECRET_KEY'] = 'hello'
-data_path = './../data'
+data_path = './../artefacts'
 Bootstrap(app)
 messages = []
 
